@@ -850,6 +850,9 @@
   "popupExtractQuestionsConnectFailed": {
     "message": "Unable to connect to the AI Studio tab. Reload the page and try again."
   },
+  "popupSendQuestionFailed": {
+    "message": "Failed to send the question to AI Studio. Please try again."
+  },
   "categoryPageLoadCategories": {
     "message": "Category page: Load categories"
   },

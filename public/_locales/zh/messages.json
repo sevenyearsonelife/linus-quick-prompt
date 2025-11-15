@@ -853,6 +853,9 @@
   "popupExtractQuestionsConnectFailed": {
     "message": "无法连接到 AI Studio 标签页，请刷新页面后重试。"
   },
+  "popupSendQuestionFailed": {
+    "message": "发送问题到 AI Studio 失败，请稍后重试。"
+  },
   "categoryPageLoadCategories": {
     "message": "分类管理页：加载分类"
   },

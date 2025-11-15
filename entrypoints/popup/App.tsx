@@ -95,6 +95,12 @@ function App() {
     return tabs[0]?.id
   }
 
+  const htmlToPlainText = (html: string): string => {
+    const container = document.createElement('div')
+    container.innerHTML = html
+    return (container.textContent || container.innerText || '').replace(/\s+/g, ' ').trim()
+  }
+
   const extractQuestionsInTab = async (tabId: number): Promise<string[]> => {
     const scripting = (browser as any)?.scripting
     if (!scripting?.executeScript) {
@@ -281,6 +287,28 @@ function App() {
     setExtractQuestionsError(null)
   }
 
+  const handleQuestionClick = async (questionHtml: string) => {
+    try {
+      const plainText = htmlToPlainText(questionHtml)
+      if (!plainText) {
+        setExtractQuestionsError(t('popupSendQuestionFailed'))
+        return
+      }
+      setExtractQuestionsError(null)
+      const tabId = await getActiveTabId()
+      if (!tabId) {
+        throw new Error(t('popupExtractQuestionsNoTab'))
+      }
+      await sendMessageWithAutoInjection(tabId, {
+        action: 'insertPrompt',
+        text: plainText
+      })
+    } catch (err: any) {
+      console.error('弹出窗口：发送问题失败', err)
+      setExtractQuestionsError(err?.message || t('popupSendQuestionFailed'))
+    }
+  }
+
   return (
     <div className='p-4 w-full max-w-[700px] min-w-[600px] box-border bg-white text-gray-900 dark:bg-gray-900 dark:text-white transition-colors duration-200'>
       {/* 标题区域 */}
@@ -403,7 +431,16 @@ function App() {
                 {extractedQuestions.map((question, index) => (
                   <li
                     key={`question-${index}`}
-                    className='text-sm text-gray-700 dark:text-gray-200 leading-relaxed p-2 rounded-md bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700'
+                    className='text-sm text-gray-700 dark:text-gray-200 leading-relaxed p-2 rounded-md bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-150'
+                    onClick={() => handleQuestionClick(question)}
+                    role='button'
+                    tabIndex={0}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault()
+                        handleQuestionClick(question)
+                      }
+                    }}
                     dangerouslySetInnerHTML={{ __html: question }}
                   />
                 ))}
