@@ -152,11 +152,72 @@ function App() {
         const questions: string[] = []
         let foundQuestions = false
 
-        if (!document.querySelector('textarea')) {
-          throw new Error('未检测到Google AI Studio的输入框，请确保在正确的页面上')
+        const isAlphaXiv = window.location.hostname.includes('alphaxiv.org')
+        const isAiStudio = window.location.hostname.includes('aistudio.google.com')
+        
+        if (!isAlphaXiv && !isAiStudio) {
+          throw new Error('请在支持的页面中使用该功能（Google AI Studio 或 AlphaXiv）')
         }
 
-        const allOrderedLists = document.querySelectorAll<HTMLOListElement>('ol')
+        // AlphaXiv 特定的提取逻辑
+        if (isAlphaXiv) {
+          const markdownContents = document.querySelectorAll<HTMLDivElement>('.markdown-content')
+          
+          // 优先从最后一个 markdown-content 中提取（最新的 AI 回复）
+          for (let i = markdownContents.length - 1; i >= 0 && !foundQuestions; i--) {
+            const container = markdownContents[i]
+            const orderedLists = container.querySelectorAll<HTMLOListElement>('ol')
+            
+            for (let j = 0; j < orderedLists.length; j++) {
+              const listItems = orderedLists[j].querySelectorAll('li')
+              
+              if (listItems.length >= 5) {
+                const tempQuestions: string[] = []
+                listItems.forEach((item, index) => {
+                  if (index < MAX_EXTRACTED_QUESTIONS) {
+                    const strongElement = item.querySelector<HTMLElement>('strong')
+                    const title = strongElement ? strongElement.textContent?.trim() || '' : ''
+                    const fullQuestion = item.textContent?.trim() || ''
+                    
+                    tempQuestions.push(buildQuestionHtml(index, title || null, fullQuestion))
+                  }
+                })
+                
+                if (tempQuestions.length >= 5) {
+                  questions.push(...tempQuestions)
+                  foundQuestions = true
+                  break
+                }
+              }
+            }
+          }
+
+          // 备用方案：从整个页面的 <p> 标签中查找编号段落
+          if (!foundQuestions) {
+            const allParagraphs = document.querySelectorAll<HTMLParagraphElement>('.markdown-content p')
+            const numberedParagraphs: { title: string | null; fullText: string }[] = []
+            
+            allParagraphs.forEach((paragraph) => {
+              const text = paragraph.textContent?.trim() || ''
+              if (/^\d+[\.\)、]/.test(text) && text.length > 10) {
+                const strongElement = paragraph.querySelector<HTMLElement>('strong')
+                const title = strongElement ? strongElement.textContent?.trim() || null : null
+                numberedParagraphs.push({ title, fullText: text })
+              }
+            })
+            
+            if (numberedParagraphs.length >= 5) {
+              numberedParagraphs.slice(0, MAX_EXTRACTED_QUESTIONS).forEach((item, index) => {
+                questions.push(buildQuestionHtml(index, item.title, item.fullText))
+              })
+              foundQuestions = true
+            }
+          }
+        }
+
+        // AI Studio 原有的提取逻辑
+        if (!foundQuestions) {
+          const allOrderedLists = document.querySelectorAll<HTMLOListElement>('ol')
         for (let i = 0; i < allOrderedLists.length; i++) {
           const list = allOrderedLists[i]
           const listItems = list.querySelectorAll<HTMLLIElement>('li')
@@ -235,6 +296,7 @@ function App() {
             questions.push(...tempQuestions)
             foundQuestions = true
           }
+        }
         }
 
         if (!foundQuestions || questions.length === 0) {

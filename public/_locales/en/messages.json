@@ -792,16 +792,16 @@
     "message": "Failed to get selected text"
   },
   "aiStudioPageRequired": {
-    "message": "Please use this feature on https://aistudio.google.com/."
+    "message": "Please use this feature on supported AI chat pages (Google AI Studio or AlphaXiv)."
   },
   "aiStudioTextareaMissing": {
-    "message": "Prompt textarea not found on the page. Make sure the editor is visible in AI Studio."
+    "message": "Input box not found. Make sure the editor is visible."
   },
   "aiStudioPromptRequired": {
     "message": "Prompt content cannot be empty."
   },
   "aiStudioInsertFailed": {
-    "message": "Failed to insert the prompt into AI Studio."
+    "message": "Failed to insert the prompt."
   },
   "aiStudioNoQuestionsFound": {
     "message": "No numbered questions were detected in the latest AI response."
@@ -827,7 +827,7 @@
     "message": "Extract Questions"
   },
   "popupExtractQuestionsSubtitle": {
-    "message": "Highlight top questions from Google AI Studio replies."
+    "message": "Highlight top questions from AI replies (supports Google AI Studio and AlphaXiv)."
   },
   "popupExtractQuestionsButton": {
     "message": "Extract Questions"
@@ -842,16 +842,16 @@
     "message": "Click \"Extract Questions\" after AI finishes responding to capture the numbered list."
   },
   "popupExtractQuestionsNoTab": {
-    "message": "No active tab detected. Please focus the Google AI Studio tab first."
+    "message": "No active tab detected. Please focus on a supported AI chat page first."
   },
   "popupExtractQuestionsFailed": {
     "message": "Unable to extract questions. Please try again once the AI response is visible."
   },
   "popupExtractQuestionsConnectFailed": {
-    "message": "Unable to connect to the AI Studio tab. Reload the page and try again."
+    "message": "Unable to connect to the tab. Reload the page and try again."
   },
   "popupSendQuestionFailed": {
-    "message": "Failed to send the question to AI Studio. Please try again."
+    "message": "Failed to send the question. Please try again."
   },
   "categoryPageLoadCategories": {
     "message": "Category page: Load categories"

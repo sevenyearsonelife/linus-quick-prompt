@@ -795,16 +795,16 @@
     "message": "获取选中文本失败"
   },
   "aiStudioPageRequired": {
-    "message": "请在 https://aistudio.google.com/ 页面中使用该功能。"
+    "message": "请在支持的 AI 对话页面中使用该功能（Google AI Studio 或 AlphaXiv）。"
   },
   "aiStudioTextareaMissing": {
-    "message": "未找到 AI Studio 的输入框，请确认编辑器可见。"
+    "message": "未找到输入框，请确认编辑器可见。"
   },
   "aiStudioPromptRequired": {
     "message": "提示内容不能为空。"
   },
   "aiStudioInsertFailed": {
-    "message": "向 AI Studio 输入提示时出错。"
+    "message": "输入提示时出错。"
   },
   "aiStudioNoQuestionsFound": {
     "message": "当前回复中没有检测到编号问题。"
@@ -830,7 +830,7 @@
     "message": "提取问题"
   },
   "popupExtractQuestionsSubtitle": {
-    "message": "从 Google AI Studio 回复中提炼关键问题。"
+    "message": "从 AI 回复中提炼关键问题（支持 Google AI Studio 和 AlphaXiv）。"
   },
   "popupExtractQuestionsButton": {
     "message": "提取问题"
@@ -845,16 +845,16 @@
     "message": "AI 回复完成后点击“提取问题”，即可获取编号问题列表。"
   },
   "popupExtractQuestionsNoTab": {
-    "message": "未检测到活动标签页，请先切换到 Google AI Studio。"
+    "message": "未检测到活动标签页，请先切换到支持的 AI 对话页面。"
   },
   "popupExtractQuestionsFailed": {
     "message": "提取问题失败，请在回复可见后再试一次。"
   },
   "popupExtractQuestionsConnectFailed": {
-    "message": "无法连接到 AI Studio 标签页，请刷新页面后重试。"
+    "message": "无法连接到标签页，请刷新页面后重试。"
   },
   "popupSendQuestionFailed": {
-    "message": "发送问题到 AI Studio 失败，请稍后重试。"
+    "message": "发送问题失败，请稍后重试。"
   },
   "categoryPageLoadCategories": {
     "message": "分类管理页：加载分类"

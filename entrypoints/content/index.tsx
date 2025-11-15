@@ -21,6 +21,10 @@ export default defineContentScript({
       return window.location.hostname.includes('aistudio.google.com')
     }
 
+    const isAlphaXivPage = (): boolean => {
+      return window.location.hostname.includes('alphaxiv.org')
+    }
+
     const MAX_EXTRACTED_QUESTIONS = 10
 
     const insertPromptAndRunOnAiStudio = async (promptText: string): Promise<void> => {
@@ -61,6 +65,44 @@ export default defineContentScript({
         })
       } catch (error) {
         console.error('AI Studio: insertPromptAndRunOnAiStudio 失败', error)
+        throw error
+      }
+    }
+
+    const insertPromptAndRunOnAlphaXiv = async (promptText: string): Promise<void> => {
+      try {
+        const editor = document.querySelector<HTMLDivElement>('.tiptap.ProseMirror[contenteditable="true"]')
+
+        if (!editor) {
+          console.error('AlphaXiv: 未找到输入框')
+          throw new Error(t('aiStudioTextareaMissing'))
+        }
+
+        // 清空现有内容并插入新文本
+        editor.textContent = promptText
+
+        // 触发 input 事件以激活编辑器
+        const inputEvent = new Event('input', { bubbles: true })
+        editor.dispatchEvent(inputEvent)
+
+        editor.focus()
+
+        // 等待一段时间后点击发送按钮
+        await new Promise<void>((resolve) => {
+          setTimeout(() => {
+            // 查找带有 lucide-arrow-up 图标的发送按钮
+            const arrowUpIcon = document.querySelector('.lucide.lucide-arrow-up')
+            if (arrowUpIcon) {
+              const sendButton = arrowUpIcon.closest('button')
+              if (sendButton && !sendButton.disabled) {
+                sendButton.click()
+              }
+            }
+            resolve()
+          }, 500)
+        })
+      } catch (error) {
+        console.error('AlphaXiv: insertPromptAndRunOnAlphaXiv 失败', error)
         throw error
       }
     }
@@ -249,6 +291,81 @@ export default defineContentScript({
         if (sequentialBlock.length >= 5) {
           sequentialBlock.slice(0, MAX_EXTRACTED_QUESTIONS).forEach((text, index) => {
             questions.push(`<span class="question-number">${index + 1}.</span> ${stripNumberPrefix(text)}`)
+          })
+          foundQuestions = true
+        }
+      }
+
+      if (!foundQuestions || questions.length === 0) {
+        throw new Error(t('aiStudioNoQuestionsFound'))
+      }
+
+      return questions
+    }
+
+    const extractQuestionsFromAlphaXiv = (): string[] => {
+      const questions: string[] = []
+      let foundQuestions = false
+
+      // 查找所有 markdown-content 容器（AlphaXiv 特有的结构）
+      const markdownContents = document.querySelectorAll<HTMLDivElement>('.markdown-content')
+      
+      // 优先从最后一个 markdown-content 中提取（最新的 AI 回复）
+      for (let i = markdownContents.length - 1; i >= 0; i--) {
+        const container = markdownContents[i]
+        const orderedLists = container.querySelectorAll<HTMLOListElement>('ol')
+        
+        for (let j = 0; j < orderedLists.length; j++) {
+          const listItems = orderedLists[j].querySelectorAll('li')
+          
+          if (listItems.length >= 5) {
+            const tempQuestions: string[] = []
+            listItems.forEach((item, index) => {
+              if (index < MAX_EXTRACTED_QUESTIONS) {
+                // 提取 strong 标签作为标题
+                const strongElement = item.querySelector<HTMLElement>('strong')
+                const title = strongElement ? strongElement.textContent?.trim() || '' : ''
+                const fullQuestion = item.textContent?.trim() || ''
+                
+                tempQuestions.push(buildQuestionHtml(index, title || null, fullQuestion))
+              }
+            })
+            
+            if (tempQuestions.length >= 5) {
+              questions.push(...tempQuestions)
+              foundQuestions = true
+              break
+            }
+          }
+        }
+        
+        if (foundQuestions) break
+      }
+
+      // 备用方案：从整个页面的 <p> 标签中查找编号段落
+      if (!foundQuestions) {
+        const allParagraphs = document.querySelectorAll<HTMLParagraphElement>('.markdown-content p')
+        const numberedParagraphs: { title: string | null; fullText: string }[] = []
+        
+        allParagraphs.forEach((paragraph) => {
+          const text = paragraph.textContent?.trim() || ''
+          if (/^\d+[\.\)、]/.test(text) && text.length > 10) {
+            const strongElement = paragraph.querySelector<HTMLElement>('strong')
+            const title = strongElement ? strongElement.textContent?.trim() || null : null
+            numberedParagraphs.push({ title, fullText: text })
+          }
+        })
+        
+        if (numberedParagraphs.length >= 5) {
+          numberedParagraphs.slice(0, MAX_EXTRACTED_QUESTIONS).forEach((item, index) => {
+            if (item.title && item.fullText.includes(item.title)) {
+              const questionText = item.fullText.substring(item.fullText.indexOf(item.title) + item.title.length).trim()
+              const cleanTitle = stripNumberPrefix(item.title)
+              const cleanRest = stripNumberPrefix(questionText)
+              questions.push(`<span class="question-number">${index + 1}.</span> <span class="question-title">${cleanTitle}</span> ${cleanRest}`)
+            } else {
+              questions.push(`<span class="question-number">${index + 1}.</span> ${stripNumberPrefix(item.fullText)}`)
+            }
           })
           foundQuestions = true
         }
@@ -505,7 +622,7 @@ export default defineContentScript({
       console.log('内容脚本: 收到消息', message)
 
       if (message.action === 'insertPrompt') {
-        if (!isAiStudioPage()) {
+        if (!isAiStudioPage() && !isAlphaXivPage()) {
           return { success: false, error: t('aiStudioPageRequired') }
         }
         const promptText = typeof message.text === 'string' ? message.text : ''
@@ -513,7 +630,11 @@ export default defineContentScript({
           return { success: false, error: t('aiStudioPromptRequired') }
         }
         try {
-          await insertPromptAndRunOnAiStudio(promptText)
+          if (isAlphaXivPage()) {
+            await insertPromptAndRunOnAlphaXiv(promptText)
+          } else {
+            await insertPromptAndRunOnAiStudio(promptText)
+          }
           return { success: true }
         } catch (error: any) {
           return { success: false, error: error?.message || t('aiStudioInsertFailed') }
@@ -521,11 +642,13 @@ export default defineContentScript({
       }
 
       if (message.action === 'extractQuestions') {
-        if (!isAiStudioPage()) {
+        if (!isAiStudioPage() && !isAlphaXivPage()) {
           return { success: false, error: t('aiStudioPageRequired') }
         }
         try {
-          const questions = extractQuestionsFromAiResponse()
+          const questions = isAlphaXivPage() 
+            ? extractQuestionsFromAlphaXiv() 
+            : extractQuestionsFromAiResponse()
           return { success: true, questions }
         } catch (error: any) {
           return { success: false, error: error?.message || t('aiStudioExtractFailed') }
