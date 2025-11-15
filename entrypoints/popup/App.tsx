@@ -282,7 +282,7 @@ function App() {
   }
 
   return (
-    <div className='p-4 w-full max-w-[350px] min-w-[300px] box-border bg-white text-gray-900 dark:bg-gray-900 dark:text-white transition-colors duration-200'>
+    <div className='p-4 w-full max-w-[700px] min-w-[600px] box-border bg-white text-gray-900 dark:bg-gray-900 dark:text-white transition-colors duration-200'>
       {/* 标题区域 */}
       <div className='flex justify-center items-center mb-3'>
         <img src={Logo} className='h-8 mr-2' alt='quick prompt logo' />
@@ -336,16 +336,16 @@ function App() {
           {t('managePrompts')}
         </button>
 
-        <div className='rounded-xl shadow-lg p-4 bg-gradient-to-br from-white to-gray-50 dark:from-gray-800 dark:to-gray-850 border border-gray-100 dark:border-gray-700 transition-all duration-200 hover:shadow-xl'>
+        <div className='rounded-lg shadow bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 p-4 transition-colors duration-200'>
           {/* 标题区域 */}
-          <div className='flex items-center gap-2 mb-3'>
-            <div className='flex-shrink-0 w-8 h-8 bg-gradient-to-br from-blue-500 to-blue-600 dark:from-blue-600 dark:to-blue-700 rounded-lg flex items-center justify-center shadow-md'>
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-4.5 w-4.5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+          <div className='flex items-center gap-3 mb-3'>
+            <div className='flex-shrink-0 w-10 h-10 bg-blue-100 text-blue-600 dark:bg-blue-900/30 dark:text-blue-300 rounded-full flex items-center justify-center'>
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
             </div>
             <div className='flex-1'>
-              <h2 className='text-sm font-bold m-0 text-gray-800 dark:text-gray-100 leading-tight'>{t('popupExtractQuestionsTitle')}</h2>
+              <h2 className='text-sm font-semibold m-0 text-gray-900 dark:text-white leading-tight'>{t('popupExtractQuestionsTitle')}</h2>
               <p className='text-xs text-gray-500 dark:text-gray-400 m-0 mt-0.5 leading-tight'>{t('popupExtractQuestionsSubtitle')}</p>
             </div>
           </div>
@@ -355,7 +355,7 @@ function App() {
             <button
               onClick={handleExtractQuestions}
               disabled={extractingQuestions}
-              className='flex-1 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 active:from-blue-800 active:to-blue-900 disabled:from-gray-400 disabled:to-gray-500 text-white px-4 py-2.5 rounded-lg text-sm font-semibold shadow-md hover:shadow-lg disabled:opacity-60 disabled:cursor-not-allowed disabled:shadow-none transition-all duration-200 transform hover:scale-[1.02] active:scale-[0.98]'
+              className='flex-1 bg-blue-600 text-white px-4 py-2 rounded-md text-sm font-semibold hover:bg-blue-700 active:bg-blue-800 disabled:bg-blue-400 disabled:text-white disabled:cursor-not-allowed transition-colors duration-200'
             >
               {extractingQuestions ? (
                 <span className='flex items-center justify-center gap-2'>
@@ -371,7 +371,7 @@ function App() {
             </button>
             <button
               onClick={handleClearQuestions}
-              className='px-4 py-2.5 rounded-lg text-sm font-medium bg-white dark:bg-gray-700 border-2 border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-200 hover:border-gray-400 dark:hover:border-gray-500 hover:bg-gray-50 dark:hover:bg-gray-650 active:bg-gray-100 dark:active:bg-gray-600 shadow-sm hover:shadow-md transition-all duration-200 transform hover:scale-[1.02] active:scale-[0.98]'
+              className='px-4 py-2 rounded-md text-sm font-medium border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-200 hover:border-gray-400 dark:hover:border-gray-500 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-200'
             >
               {t('popupClearQuestionsButton')}
             </button>
@@ -379,7 +379,7 @@ function App() {
 
           {/* 错误提示 */}
           {extractQuestionsError && (
-            <div className='mb-3 p-3 rounded-lg bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 flex items-start gap-2'>
+            <div className='mb-3 p-3 rounded-md bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 flex items-start gap-2'>
               <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-red-500 dark:text-red-400 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
@@ -390,7 +390,7 @@ function App() {
           )}
 
           {/* 结果展示区域 */}
-          <div className='max-h-56 overflow-y-auto rounded-lg border-2 border-gray-200 dark:border-gray-700 p-3 bg-white dark:bg-gray-900/60 backdrop-blur-sm shadow-inner'>
+          <div className='max-h-56 overflow-y-auto rounded-lg border border-gray-200 dark:border-gray-700 p-3 bg-gray-50 dark:bg-gray-900'>
             {extractedQuestions.length === 0 ? (
               <div className='flex flex-col items-center justify-center py-6 text-center'>
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-12 w-12 text-gray-300 dark:text-gray-600 mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
@@ -399,11 +399,11 @@ function App() {
                 <p className='text-sm text-gray-500 dark:text-gray-400 m-0 font-medium'>{t('popupExtractQuestionsEmpty')}</p>
               </div>
             ) : (
-              <ol className='list-none m-0 p-0 space-y-2.5'>
+              <ol className='list-none m-0 p-0 space-y-2'>
                 {extractedQuestions.map((question, index) => (
                   <li
                     key={`question-${index}`}
-                    className='text-xs text-gray-700 dark:text-gray-200 leading-relaxed p-2.5 rounded-md bg-gray-50 dark:bg-gray-800/50 hover:bg-blue-50 dark:hover:bg-blue-900/20 border border-transparent hover:border-blue-200 dark:hover:border-blue-800 transition-all duration-150 cursor-default'
+                    className='text-sm text-gray-700 dark:text-gray-200 leading-relaxed p-2 rounded-md bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700'
                     dangerouslySetInnerHTML={{ __html: question }}
                   />
                 ))}
