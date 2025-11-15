@@ -8,10 +8,6 @@ function App() {
   const [promptCount, setPromptCount] = useState<number>(0)
   const [loading, setLoading] = useState<boolean>(true)
   const [error, setError] = useState<string | null>(null)
-  const [shortcutKey, setShortcutKey] = useState<string>('')
-  const [saveShortcutKey, setSaveShortcutKey] = useState<string>('')
-  const [shortcutSettingsUrl, setShortcutSettingsUrl] = useState<string>('')
-  const [showShortcutHelp, setShowShortcutHelp] = useState<boolean>(false)
   const [extractedQuestions, setExtractedQuestions] = useState<string[]>([])
   const [extractingQuestions, setExtractingQuestions] = useState<boolean>(false)
   const [extractQuestionsError, setExtractQuestionsError] = useState<string | null>(null)
@@ -51,73 +47,9 @@ function App() {
     }
   }
 
-  // 获取当前快捷键
-  const getShortcutKey = async () => {
-    try {
-      // 检测当前浏览器类型
-      const isFirefox = navigator.userAgent.includes('Firefox')
-      // 设置对应浏览器的扩展快捷键设置页面
-      if (isFirefox) {
-        setShortcutSettingsUrl('about:addons')
-      } else {
-        setShortcutSettingsUrl('chrome://extensions/shortcuts')
-      }
-      
-      // 检查用户是否已选择不再提醒
-      const reminderSettings = await browser.storage.local.get('shortcut_reminder_dismissed')
-      const isReminderDismissed = reminderSettings.shortcut_reminder_dismissed === true
-      
-      // 从浏览器API获取真实配置的快捷键
-      const commands = await browser.commands.getAll()
-      const commandMap = {
-        prompt: commands.find(cmd => cmd.name === 'open-prompt-selector'),
-        save: commands.find(cmd => cmd.name === 'save-selected-prompt')
-      }
-      
-      // 提取快捷键字符串
-      const shortcuts = {
-        prompt: commandMap.prompt?.shortcut || '',
-        save: commandMap.save?.shortcut || ''
-      }
-      
-      // 更新状态
-      setShortcutKey(shortcuts.prompt)
-      setSaveShortcutKey(shortcuts.save)
-      
-      // 判断是否显示帮助信息：当任一快捷键未设置且用户未选择不再提醒时显示
-      const hasAllShortcuts = shortcuts.prompt && shortcuts.save
-      setShowShortcutHelp(!hasAllShortcuts && !isReminderDismissed)
-      
-    } catch (err) {
-      console.error('获取快捷键设置失败', err)
-      
-      // 检查用户是否已选择不再提醒
-      try {
-        const reminderSettings = await browser.storage.local.get('shortcut_reminder_dismissed')
-        const isReminderDismissed = reminderSettings.shortcut_reminder_dismissed === true
-        
-        // 出错时提示用户进入快捷键设置页面（如果用户未选择不再提醒）
-        const isFirefox = navigator.userAgent.includes('Firefox')
-        if (isFirefox) {
-          setShortcutSettingsUrl('about:addons')
-        } else {
-          setShortcutSettingsUrl('chrome://extensions/shortcuts')
-        }
-        setShortcutKey('')
-        setSaveShortcutKey('')
-        setShowShortcutHelp(!isReminderDismissed)
-      } catch (storageErr) {
-        console.error('检查提醒设置失败', storageErr)
-        // 如果连存储都访问不了，还是显示提醒
-        setShowShortcutHelp(true)
-      }
-    }
-  }
-
   // 首次加载
   useEffect(() => {
     loadPromptCount()
-    getShortcutKey()
 
     // 检查系统暗黑模式设置并应用
     const applySystemTheme = () => {
@@ -155,23 +87,6 @@ function App() {
       console.error('弹出窗口：打开选项页出错', err)
       // 回退方案：直接使用API打开选项页
       browser.runtime.openOptionsPage()
-    }
-  }
-
-  // 打开快捷键设置页面
-  const openShortcutSettings = () => {
-    // 对于Firefox，直接打开about:addons后需要用户进一步操作
-    if (navigator.userAgent.includes('Firefox')) {
-      // 显示额外提示
-      alert(t('firefoxShortcutHelp'))
-    }
-    
-    // 尝试打开设置页面
-    try {
-      browser.tabs.create({ url: shortcutSettingsUrl })
-      window.close()
-    } catch (err) {
-      console.error('打开快捷键设置页面失败', err)
     }
   }
 
@@ -366,20 +281,6 @@ function App() {
     setExtractQuestionsError(null)
   }
 
-  // 不再提醒快捷键设置问题
-  const dismissShortcutReminder = async () => {
-    try {
-      await browser.storage.local.set({
-        'shortcut_reminder_dismissed': true,
-        'shortcut_reminder_dismissed_at': Date.now()
-      })
-      setShowShortcutHelp(false)
-      console.log(t('popupShortcutReminderSet'))
-    } catch (error) {
-      console.error('弹出窗口: 设置不再提醒时出错:', error)
-    }
-  }
-
   return (
     <div className='p-4 w-full max-w-[350px] min-w-[300px] box-border bg-white text-gray-900 dark:bg-gray-900 dark:text-white transition-colors duration-200'>
       {/* 标题区域 */}
@@ -435,123 +336,80 @@ function App() {
           {t('managePrompts')}
         </button>
 
-        <div className='rounded-lg shadow p-3 bg-white dark:bg-gray-800 transition-colors duration-200'>
-          <div className='flex items-center justify-between flex-wrap gap-2 mb-2'>
-            <div>
-              <h2 className='text-sm font-semibold m-0 text-gray-800 dark:text-gray-100'>{t('popupExtractQuestionsTitle')}</h2>
-              <p className='text-xs text-gray-500 dark:text-gray-400 m-0'>{t('popupExtractQuestionsSubtitle')}</p>
+        <div className='rounded-xl shadow-lg p-4 bg-gradient-to-br from-white to-gray-50 dark:from-gray-800 dark:to-gray-850 border border-gray-100 dark:border-gray-700 transition-all duration-200 hover:shadow-xl'>
+          {/* 标题区域 */}
+          <div className='flex items-center gap-2 mb-3'>
+            <div className='flex-shrink-0 w-8 h-8 bg-gradient-to-br from-blue-500 to-blue-600 dark:from-blue-600 dark:to-blue-700 rounded-lg flex items-center justify-center shadow-md'>
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-4.5 w-4.5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
             </div>
-            <div className='flex items-center gap-2'>
-              <button
-                onClick={handleExtractQuestions}
-                disabled={extractingQuestions}
-                className='bg-blue-600 text-white px-3 py-1.5 rounded-md text-xs font-medium hover:bg-blue-700 disabled:opacity-60 disabled:cursor-not-allowed dark:bg-blue-700 dark:hover:bg-blue-800 transition-colors duration-200'
-              >
-                {extractingQuestions ? t('popupExtractQuestionsWorking') : t('popupExtractQuestionsButton')}
-              </button>
-              <button
-                onClick={handleClearQuestions}
-                className='border border-gray-300 dark:border-gray-600 text-gray-600 dark:text-gray-200 px-3 py-1.5 rounded-md text-xs font-medium hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-200'
-              >
-                {t('popupClearQuestionsButton')}
-              </button>
+            <div className='flex-1'>
+              <h2 className='text-sm font-bold m-0 text-gray-800 dark:text-gray-100 leading-tight'>{t('popupExtractQuestionsTitle')}</h2>
+              <p className='text-xs text-gray-500 dark:text-gray-400 m-0 mt-0.5 leading-tight'>{t('popupExtractQuestionsSubtitle')}</p>
             </div>
           </div>
 
+          {/* 按钮区域 */}
+          <div className='flex items-center gap-2 mb-3'>
+            <button
+              onClick={handleExtractQuestions}
+              disabled={extractingQuestions}
+              className='flex-1 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 active:from-blue-800 active:to-blue-900 disabled:from-gray-400 disabled:to-gray-500 text-white px-4 py-2.5 rounded-lg text-sm font-semibold shadow-md hover:shadow-lg disabled:opacity-60 disabled:cursor-not-allowed disabled:shadow-none transition-all duration-200 transform hover:scale-[1.02] active:scale-[0.98]'
+            >
+              {extractingQuestions ? (
+                <span className='flex items-center justify-center gap-2'>
+                  <svg className="animate-spin h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                  </svg>
+                  {t('popupExtractQuestionsWorking')}
+                </span>
+              ) : (
+                t('popupExtractQuestionsButton')
+              )}
+            </button>
+            <button
+              onClick={handleClearQuestions}
+              className='px-4 py-2.5 rounded-lg text-sm font-medium bg-white dark:bg-gray-700 border-2 border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-200 hover:border-gray-400 dark:hover:border-gray-500 hover:bg-gray-50 dark:hover:bg-gray-650 active:bg-gray-100 dark:active:bg-gray-600 shadow-sm hover:shadow-md transition-all duration-200 transform hover:scale-[1.02] active:scale-[0.98]'
+            >
+              {t('popupClearQuestionsButton')}
+            </button>
+          </div>
+
+          {/* 错误提示 */}
           {extractQuestionsError && (
-            <div className='text-xs text-red-500 dark:text-red-400 mb-2 leading-relaxed'>
-              {extractQuestionsError}
+            <div className='mb-3 p-3 rounded-lg bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 flex items-start gap-2'>
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-red-500 dark:text-red-400 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              <span className='text-xs text-red-600 dark:text-red-400 leading-relaxed flex-1'>
+                {extractQuestionsError}
+              </span>
             </div>
           )}
 
-          <div className='max-h-48 overflow-y-auto border border-gray-100 dark:border-gray-700 rounded-md p-2 bg-gray-50 dark:bg-gray-900/40'>
+          {/* 结果展示区域 */}
+          <div className='max-h-56 overflow-y-auto rounded-lg border-2 border-gray-200 dark:border-gray-700 p-3 bg-white dark:bg-gray-900/60 backdrop-blur-sm shadow-inner'>
             {extractedQuestions.length === 0 ? (
-              <p className='text-xs text-gray-500 dark:text-gray-400 m-0'>{t('popupExtractQuestionsEmpty')}</p>
+              <div className='flex flex-col items-center justify-center py-6 text-center'>
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-12 w-12 text-gray-300 dark:text-gray-600 mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                </svg>
+                <p className='text-sm text-gray-500 dark:text-gray-400 m-0 font-medium'>{t('popupExtractQuestionsEmpty')}</p>
+              </div>
             ) : (
-              <ol className='list-none m-0 p-0 space-y-2'>
+              <ol className='list-none m-0 p-0 space-y-2.5'>
                 {extractedQuestions.map((question, index) => (
                   <li
                     key={`question-${index}`}
-                    className='text-xs text-gray-700 dark:text-gray-200 leading-relaxed'
+                    className='text-xs text-gray-700 dark:text-gray-200 leading-relaxed p-2.5 rounded-md bg-gray-50 dark:bg-gray-800/50 hover:bg-blue-50 dark:hover:bg-blue-900/20 border border-transparent hover:border-blue-200 dark:hover:border-blue-800 transition-all duration-150 cursor-default'
                     dangerouslySetInnerHTML={{ __html: question }}
                   />
                 ))}
               </ol>
             )}
           </div>
-        </div>
-
-        {/* 快捷方式提示区域 */}
-        <div className='mt-3 rounded-lg bg-gray-50 dark:bg-gray-800 p-3 shadow-sm'>
-          <h3 className='text-xs font-medium text-gray-600 dark:text-gray-300 mb-2'>{t('usage')}</h3>
-
-          <div className='flex items-start mb-2'>
-            <div className='flex-shrink-0 text-blue-500 dark:text-blue-400 mr-2 mt-1'>
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 15l-2 5L9 9l11 4-5 2zm0 0l5 5M7.188 2.239l.777 2.897M5.136 7.965l-2.898-.777M13.95 4.05l-2.122 2.122m-5.657 5.656l-2.12 2.122" />
-              </svg>
-            </div>
-            <span className='text-xs text-gray-600 dark:text-gray-300 leading-relaxed'>
-              {t('quickInput')} <kbd className='inline-flex items-center justify-center px-1.5 py-0.5 my-0.5 text-xs font-semibold bg-white dark:bg-gray-700 rounded border border-gray-300 dark:border-gray-600 shadow-sm text-blue-600 dark:text-blue-400 min-h-[20px]'>/p</kbd>
-              {shortcutKey && (
-                <> {t('orPress')} <kbd className='inline-flex items-center justify-center ml-1 px-1.5 py-0.5 my-0.5 text-xs font-semibold bg-white dark:bg-gray-700 rounded border border-gray-300 dark:border-gray-600 shadow-sm text-blue-600 dark:text-blue-400 min-h-[20px]'>{shortcutKey}</kbd></>
-              )}
-            </span>
-          </div>
-
-          {saveShortcutKey && (
-            <div className='flex items-start mb-2'>
-              <div className='flex-shrink-0 text-blue-500 dark:text-blue-400 mr-2 mt-1'>
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                </svg>
-              </div>
-              <span className='text-xs text-gray-600 dark:text-gray-300 leading-relaxed'>
-                {t('quickSave')} <kbd className='inline-flex items-center justify-center px-1.5 py-0.5 my-0.5 text-xs font-semibold bg-white dark:bg-gray-700 rounded border border-gray-300 dark:border-gray-600 shadow-sm text-blue-600 dark:text-blue-400 min-h-[20px]'>{saveShortcutKey}</kbd> {t('savePrompt')}
-              </span>
-            </div>
-          )}
-
-          <div className='flex items-start mb-2'>
-            <div className='flex-shrink-0 text-blue-500 dark:text-blue-400 mr-2 mt-1'>
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" />
-              </svg>
-            </div>
-            <span className='text-xs text-gray-600 dark:text-gray-300 leading-relaxed'>
-              {t('rightClickSave')}
-            </span>
-          </div>
-
-          {showShortcutHelp && (
-            <div className='mt-2 bg-yellow-50 dark:bg-yellow-900/20 p-2 rounded-md border border-yellow-200 dark:border-yellow-800'>
-              <div className='flex items-start'>
-                <div className='flex-shrink-0 text-yellow-500 dark:text-yellow-400 mr-2 mt-1'>
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-                  </svg>
-                </div>
-                <div>
-                  <p className='text-xs text-yellow-700 dark:text-yellow-300 leading-relaxed mb-1'>
-                    {t('shortcutNotConfigured')}
-                  </p>
-                  <button 
-                    onClick={openShortcutSettings}
-                    className='text-xs bg-yellow-100 hover:bg-yellow-200 dark:bg-yellow-800 dark:hover:bg-yellow-700 text-yellow-800 dark:text-yellow-200 px-2 py-1 rounded-md transition-colors duration-200'
-                  >
-                    {t('configureShortcut')}
-                  </button>
-                  <button
-                    onClick={dismissShortcutReminder}
-                    className='text-xs text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 px-1 py-1 transition-colors duration-200 ml-2'
-                    title={t('dismissReminderTitle')}
-                  >
-                    {t('noReminder')}
-                  </button>
-                </div>
-              </div>
-            </div>
-          )}
         </div>
       </div>
     </div>
