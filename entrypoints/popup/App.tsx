@@ -4,6 +4,8 @@ import Logo from '~/assets/icon.png'
 import '~/assets/tailwind.css'
 import { t } from '../../utils/i18n'
 
+const LAST_QUESTIONS_STORAGE_KEY = 'quickPrompt:lastExtractedQuestions'
+
 function App() {
   const [promptCount, setPromptCount] = useState<number>(0)
   const [loading, setLoading] = useState<boolean>(true)
@@ -74,6 +76,21 @@ function App() {
     return () => {
       darkModeMediaQuery.removeEventListener('change', listener)
     }
+  }, [])
+
+  useEffect(() => {
+    const loadLastQuestions = async () => {
+      try {
+        const result = await browser.storage.local.get(LAST_QUESTIONS_STORAGE_KEY)
+        const savedQuestions = result?.[LAST_QUESTIONS_STORAGE_KEY]
+        if (Array.isArray(savedQuestions)) {
+          setExtractedQuestions(savedQuestions)
+        }
+      } catch (err) {
+        console.error('弹出窗口：读取历史问题失败', err)
+      }
+    }
+    loadLastQuestions()
   }, [])
 
   // 打开选项页（在新标签页中）
@@ -273,6 +290,13 @@ function App() {
       }
       const questions = await extractQuestionsInTab(tabId)
       setExtractedQuestions(questions)
+      try {
+        await browser.storage.local.set({
+          [LAST_QUESTIONS_STORAGE_KEY]: questions,
+        })
+      } catch (err) {
+        console.error('弹出窗口：缓存提取问题失败', err)
+      }
       if (questions.length === 0) {
         setExtractQuestionsError(t('aiStudioNoQuestionsFound'))
       }
@@ -288,9 +312,14 @@ function App() {
     }
   }
 
-  const handleClearQuestions = () => {
+  const handleClearQuestions = async () => {
     setExtractedQuestions([])
     setExtractQuestionsError(null)
+    try {
+      await browser.storage.local.remove(LAST_QUESTIONS_STORAGE_KEY)
+    } catch (err) {
+      console.error('弹出窗口：清理历史问题失败', err)
+    }
   }
 
   const handleQuestionClick = async (questionHtml: string, displayIndex: number) => {
