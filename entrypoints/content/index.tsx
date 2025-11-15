@@ -17,6 +17,250 @@ export default defineContentScript({
     let lastInputValue = ''
     let isPromptSelectorOpen = false
 
+    const isAiStudioPage = (): boolean => {
+      return window.location.hostname.includes('aistudio.google.com')
+    }
+
+    const MAX_EXTRACTED_QUESTIONS = 10
+
+    const insertPromptAndRunOnAiStudio = async (promptText: string): Promise<void> => {
+      try {
+        const textarea = document.querySelector<HTMLTextAreaElement>('textarea')
+
+        if (!textarea) {
+          console.error('AI Studio: 未找到输入框')
+          throw new Error(t('aiStudioTextareaMissing'))
+        }
+
+        textarea.value = promptText
+
+        const inputEvent = new Event('input', { bubbles: true })
+        textarea.dispatchEvent(inputEvent)
+
+        const changeEvent = new Event('change', { bubbles: true })
+        textarea.dispatchEvent(changeEvent)
+
+        textarea.focus()
+
+        await new Promise<void>((resolve) => {
+          setTimeout(() => {
+            const runButton = document.querySelector<HTMLButtonElement>('button.run-button')
+            if (runButton && !runButton.disabled) {
+              runButton.click()
+            } else {
+              const allRunButtons = document.querySelectorAll<HTMLButtonElement>('button[type="submit"]')
+              for (const btn of Array.from(allRunButtons)) {
+                if (btn.textContent?.includes('Run') && !btn.disabled) {
+                  btn.click()
+                  break
+                }
+              }
+            }
+            resolve()
+          }, 500)
+        })
+      } catch (error) {
+        console.error('AI Studio: insertPromptAndRunOnAiStudio 失败', error)
+        throw error
+      }
+    }
+
+    const buildQuestionHtml = (index: number, title: string | null, text: string): string => {
+      if (title && text.includes(title)) {
+        const questionText = text.substring(text.indexOf(title) + title.length).trim()
+        return `<span class="question-number">${index + 1}.</span> <span class="question-title">${title}</span> ${questionText}`
+      }
+      return `<span class="question-number">${index + 1}.</span> ${text}`
+    }
+
+    const stripNumberPrefix = (text: string): string => {
+      return text.replace(/^\d+[\.\)、]\s*/, '')
+    }
+
+    const normalizeLinesFromBody = (): string[] => {
+      const bodyText = document.body.innerText || ''
+      return bodyText
+        .split('\n')
+        .map(line => line.trim())
+        .filter(line => line.length > 0)
+    }
+
+    const collectNumberedParagraphsFromLines = (lines: string[]): string[] => {
+      const aggregated: string[] = []
+      let current = ''
+
+      for (const line of lines) {
+        if (/^\d+[\.\)、]/.test(line)) {
+          if (current) {
+            aggregated.push(current.trim())
+          }
+          current = line
+        } else if (current) {
+          current += ` ${line}`
+        }
+      }
+
+      if (current) {
+        aggregated.push(current.trim())
+      }
+
+      return aggregated
+    }
+
+    const findSequentialQuestions = (aggregated: string[]): string[] => {
+      const sequential: string[] = []
+      let currentBlock: string[] = []
+      let lastNumber: number | null = null
+
+      for (const entry of aggregated) {
+        const match = entry.match(/^(\d+)/)
+        if (!match) continue
+        const number = parseInt(match[1], 10)
+
+        if (currentBlock.length === 0) {
+          currentBlock.push(entry)
+          lastNumber = number
+        } else if (lastNumber !== null && number === lastNumber + 1) {
+          currentBlock.push(entry)
+          lastNumber = number
+        } else {
+          if (currentBlock.length >= 5) {
+            return currentBlock
+          }
+          currentBlock = [entry]
+          lastNumber = number
+        }
+
+        if (currentBlock.length >= 5) {
+          return currentBlock
+        }
+      }
+
+      if (currentBlock.length >= 5) {
+        return currentBlock
+      }
+
+      return sequential
+    }
+
+    const extractQuestionsFromAiResponse = (): string[] => {
+      const questions: string[] = []
+      let foundQuestions = false
+
+      if (!document.querySelector('textarea')) {
+        throw new Error(t('aiStudioTextareaMissing'))
+      }
+
+      const allOrderedLists = document.querySelectorAll<HTMLOListElement>('ol')
+      for (let i = 0; i < allOrderedLists.length; i++) {
+        const listItems = allOrderedLists[i].querySelectorAll('li')
+        if (listItems.length >= 5) {
+          const tempQuestions: string[] = []
+          listItems.forEach((item, index) => {
+            if (index < MAX_EXTRACTED_QUESTIONS) {
+              const strongElement = item.querySelector<HTMLElement>('strong, b')
+              const title = strongElement ? strongElement.textContent?.trim() || '' : ''
+              const fullQuestion = item.textContent?.trim() || ''
+              tempQuestions.push(buildQuestionHtml(index, title || null, fullQuestion))
+            }
+          })
+          if (tempQuestions.length >= 5) {
+            questions.push(...tempQuestions)
+            foundQuestions = true
+            break
+          }
+        }
+      }
+
+      if (!foundQuestions) {
+        console.log('尝试从段落中提取问题')
+        const allParagraphs = document.querySelectorAll<HTMLParagraphElement>('p')
+        const numberedParagraphs: { title: string | null; fullText: string }[] = []
+        
+        allParagraphs.forEach((paragraph) => {
+          const text = paragraph.textContent?.trim() || ''
+          if (/^\d+[\.\)、]/.test(text) && text.length > 10) {
+            const strongElement = paragraph.querySelector<HTMLElement>('strong, b')
+            const title = strongElement ? strongElement.textContent?.trim() || null : null
+            numberedParagraphs.push({ title, fullText: text })
+          }
+        })
+        
+        console.log(`找到 ${numberedParagraphs.length} 个编号段落`)
+        
+        if (numberedParagraphs.length >= 5) {
+          numberedParagraphs.slice(0, MAX_EXTRACTED_QUESTIONS).forEach((item, index) => {
+            if (item.title && item.fullText.includes(item.title)) {
+              const questionText = item.fullText.substring(item.fullText.indexOf(item.title) + item.title.length).trim()
+              const cleanTitle = stripNumberPrefix(item.title)
+              const cleanRest = stripNumberPrefix(questionText)
+              questions.push(`<span class="question-number">${index + 1}.</span> <span class="question-title">${cleanTitle}</span> ${cleanRest}`)
+            } else {
+              questions.push(`<span class="question-number">${index + 1}.</span> ${stripNumberPrefix(item.fullText)}`)
+            }
+          })
+          foundQuestions = true
+        }
+      }
+
+      if (!foundQuestions) {
+        const numberedTexts: string[] = []
+        const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT)
+        let node = walker.nextNode()
+        while (node) {
+          const text = node.textContent?.trim() || ''
+          if (/^\d+[\.\)、]/.test(text) && text.length > 10) {
+            numberedTexts.push(text)
+          }
+          node = walker.nextNode()
+        }
+
+        const uniqueTexts = Array.from(new Set(numberedTexts))
+        if (uniqueTexts.length >= 5) {
+          uniqueTexts.slice(0, MAX_EXTRACTED_QUESTIONS).forEach((text, index) => {
+            questions.push(`<span class="question-number">${index + 1}.</span> ${stripNumberPrefix(text)}`)
+          })
+          foundQuestions = true
+        }
+      }
+
+      if (!foundQuestions) {
+        const allListItems = document.querySelectorAll<HTMLLIElement>('li')
+        const tempQuestions: string[] = []
+        allListItems.forEach((item, index) => {
+          if (index < MAX_EXTRACTED_QUESTIONS) {
+            const text = item.textContent?.trim() || ''
+            if (text.length > 10) {
+              tempQuestions.push(`<span class="question-number">${index + 1}.</span> ${text}`)
+            }
+          }
+        })
+        if (tempQuestions.length >= 5) {
+          questions.push(...tempQuestions)
+          foundQuestions = true
+        }
+      }
+
+      if (!foundQuestions) {
+        const lines = normalizeLinesFromBody()
+        const aggregated = collectNumberedParagraphsFromLines(lines)
+        const sequentialBlock = findSequentialQuestions(aggregated)
+
+        if (sequentialBlock.length >= 5) {
+          sequentialBlock.slice(0, MAX_EXTRACTED_QUESTIONS).forEach((text, index) => {
+            questions.push(`<span class="question-number">${index + 1}.</span> ${stripNumberPrefix(text)}`)
+          })
+          foundQuestions = true
+        }
+      }
+
+      if (!foundQuestions || questions.length === 0) {
+        throw new Error(t('aiStudioNoQuestionsFound'))
+      }
+
+      return questions
+    }
+
     // 设置容器的主题属性
     const setThemeAttributes = (container: HTMLElement) => {
       // 设置数据属性以指示当前主题
@@ -259,6 +503,34 @@ export default defineContentScript({
     // 监听来自背景脚本的消息
     browser.runtime.onMessage.addListener(async (message) => {
       console.log('内容脚本: 收到消息', message)
+
+      if (message.action === 'insertPrompt') {
+        if (!isAiStudioPage()) {
+          return { success: false, error: t('aiStudioPageRequired') }
+        }
+        const promptText = typeof message.text === 'string' ? message.text : ''
+        if (!promptText.trim()) {
+          return { success: false, error: t('aiStudioPromptRequired') }
+        }
+        try {
+          await insertPromptAndRunOnAiStudio(promptText)
+          return { success: true }
+        } catch (error: any) {
+          return { success: false, error: error?.message || t('aiStudioInsertFailed') }
+        }
+      }
+
+      if (message.action === 'extractQuestions') {
+        if (!isAiStudioPage()) {
+          return { success: false, error: t('aiStudioPageRequired') }
+        }
+        try {
+          const questions = extractQuestionsFromAiResponse()
+          return { success: true, questions }
+        } catch (error: any) {
+          return { success: false, error: error?.message || t('aiStudioExtractFailed') }
+        }
+      }
 
       if (message.action === 'openPromptSelector') {
         // 使用通用函数打开提示词选择器

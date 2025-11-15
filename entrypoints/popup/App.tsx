@@ -12,6 +12,12 @@ function App() {
   const [saveShortcutKey, setSaveShortcutKey] = useState<string>('')
   const [shortcutSettingsUrl, setShortcutSettingsUrl] = useState<string>('')
   const [showShortcutHelp, setShowShortcutHelp] = useState<boolean>(false)
+  const [extractedQuestions, setExtractedQuestions] = useState<string[]>([])
+  const [extractingQuestions, setExtractingQuestions] = useState<boolean>(false)
+  const [extractQuestionsError, setExtractQuestionsError] = useState<string | null>(null)
+  const isReceivingEndMissingError = (error: any) => {
+    return typeof error?.message === 'string' && error.message.includes('Receiving end does not exist')
+  }
 
   // 加载提示数量
   const loadPromptCount = async () => {
@@ -169,6 +175,197 @@ function App() {
     }
   }
 
+  const getActiveTabId = async (): Promise<number | undefined> => {
+    const tabs = await browser.tabs.query({ active: true, currentWindow: true })
+    return tabs[0]?.id
+  }
+
+  const extractQuestionsInTab = async (tabId: number): Promise<string[]> => {
+    const scripting = (browser as any)?.scripting
+    if (!scripting?.executeScript) {
+      throw new Error(t('popupExtractQuestionsFailed'))
+    }
+
+    const [{ result }] = await scripting.executeScript({
+      target: { tabId },
+      func: () => {
+        const MAX_EXTRACTED_QUESTIONS = 10
+
+        const stripNumberPrefix = (text: string): string => {
+          return text.replace(/^\d+[\.\)、]\s*/, '').trim()
+        }
+
+        const buildQuestionHtml = (index: number, title: string | null, text: string): string => {
+          if (title && text.includes(title)) {
+            const questionText = text.substring(text.indexOf(title) + title.length).trim()
+            const cleanTitle = stripNumberPrefix(title)
+            const cleanRest = stripNumberPrefix(questionText)
+            return `<span class="question-number">${index + 1}.</span> <span class="question-title">${cleanTitle}</span> ${cleanRest}`
+          }
+          return `<span class="question-number">${index + 1}.</span> ${stripNumberPrefix(text)}`
+        }
+
+        const questions: string[] = []
+        let foundQuestions = false
+
+        if (!document.querySelector('textarea')) {
+          throw new Error('未检测到Google AI Studio的输入框，请确保在正确的页面上')
+        }
+
+        const allOrderedLists = document.querySelectorAll<HTMLOListElement>('ol')
+        for (let i = 0; i < allOrderedLists.length; i++) {
+          const list = allOrderedLists[i]
+          const listItems = list.querySelectorAll<HTMLLIElement>('li')
+          if (listItems.length >= 5) {
+            const tempQuestions: string[] = []
+            listItems.forEach((item, index) => {
+              if (index < MAX_EXTRACTED_QUESTIONS) {
+                const strongElement = item.querySelector<HTMLElement>('strong, b')
+                const questionTitle = strongElement ? strongElement.textContent?.trim() || '' : ''
+                const fullQuestion = item.textContent?.trim() || ''
+                tempQuestions.push(buildQuestionHtml(index, questionTitle || null, fullQuestion))
+              }
+            })
+            if (tempQuestions.length >= 5) {
+              questions.push(...tempQuestions)
+              foundQuestions = true
+              break
+            }
+          }
+        }
+
+        if (!foundQuestions) {
+          const allParagraphs = document.querySelectorAll<HTMLParagraphElement>('p')
+          const numberedParagraphs: { title: string | null; fullText: string }[] = []
+
+          allParagraphs.forEach((paragraph) => {
+            const text = paragraph.textContent?.trim() || ''
+            if (/^\d+[\.\)、]/.test(text) && text.length > 10) {
+              const strongElement = paragraph.querySelector<HTMLElement>('strong, b')
+              const title = strongElement ? strongElement.textContent?.trim() || null : null
+              numberedParagraphs.push({ title, fullText: text })
+            }
+          })
+
+          if (numberedParagraphs.length >= 5) {
+            numberedParagraphs.slice(0, MAX_EXTRACTED_QUESTIONS).forEach((item, index) => {
+              questions.push(buildQuestionHtml(index, item.title, item.fullText))
+            })
+            foundQuestions = true
+          }
+        }
+
+        if (!foundQuestions) {
+          const numberedTexts: string[] = []
+          const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT)
+          let node = walker.nextNode()
+          while (node) {
+            const text = node.textContent?.trim() || ''
+            if (/^\d+[\.\)、]/.test(text) && text.length > 10) {
+              numberedTexts.push(text)
+            }
+            node = walker.nextNode()
+          }
+
+          const uniqueTexts = Array.from(new Set(numberedTexts))
+          if (uniqueTexts.length >= 5) {
+            uniqueTexts.slice(0, MAX_EXTRACTED_QUESTIONS).forEach((text, index) => {
+              questions.push(`<span class="question-number">${index + 1}.</span> ${stripNumberPrefix(text)}`)
+            })
+            foundQuestions = true
+          }
+        }
+
+        if (!foundQuestions) {
+          const allListItems = document.querySelectorAll<HTMLLIElement>('li')
+          const tempQuestions: string[] = []
+          allListItems.forEach((item, index) => {
+            if (index < MAX_EXTRACTED_QUESTIONS) {
+              const text = item.textContent?.trim() || ''
+              if (text.length > 10) {
+                tempQuestions.push(`<span class="question-number">${index + 1}.</span> ${text}`)
+              }
+            }
+          })
+          if (tempQuestions.length >= 5) {
+            questions.push(...tempQuestions)
+            foundQuestions = true
+          }
+        }
+
+        if (!foundQuestions || questions.length === 0) {
+          throw new Error('未找到问题列表。请确保AI已经回复了包含有序问题的响应。')
+        }
+
+        return questions
+      }
+    })
+
+    return (result || []) as string[]
+  }
+
+  const injectContentScriptToTab = async (tabId: number): Promise<boolean> => {
+    try {
+      const scripting = (browser as any)?.scripting
+      if (!scripting?.executeScript) {
+        return false
+      }
+      await scripting.executeScript({
+        target: { tabId },
+        files: ['content-scripts/content.js']
+      })
+      return true
+    } catch (error) {
+      console.error('注入内容脚本失败:', error)
+      return false
+    }
+  }
+
+  const sendMessageWithAutoInjection = async <T,>(tabId: number, message: any): Promise<T> => {
+    try {
+      return await browser.tabs.sendMessage(tabId, message)
+    } catch (error: any) {
+      if (isReceivingEndMissingError(error)) {
+        const injected = await injectContentScriptToTab(tabId)
+        if (injected) {
+          await new Promise(resolve => setTimeout(resolve, 50))
+          return await browser.tabs.sendMessage(tabId, message)
+        }
+      }
+      throw error
+    }
+  }
+
+  const handleExtractQuestions = async () => {
+    try {
+      setExtractQuestionsError(null)
+      setExtractingQuestions(true)
+      const tabId = await getActiveTabId()
+      if (!tabId) {
+        throw new Error(t('popupExtractQuestionsNoTab'))
+      }
+      const questions = await extractQuestionsInTab(tabId)
+      setExtractedQuestions(questions)
+      if (questions.length === 0) {
+        setExtractQuestionsError(t('aiStudioNoQuestionsFound'))
+      }
+    } catch (err: any) {
+      console.error('弹出窗口：提取问题失败', err)
+      if (isReceivingEndMissingError(err)) {
+        setExtractQuestionsError(t('popupExtractQuestionsConnectFailed'))
+      } else {
+        setExtractQuestionsError(err?.message || t('popupExtractQuestionsFailed'))
+      }
+    } finally {
+      setExtractingQuestions(false)
+    }
+  }
+
+  const handleClearQuestions = () => {
+    setExtractedQuestions([])
+    setExtractQuestionsError(null)
+  }
+
   // 不再提醒快捷键设置问题
   const dismissShortcutReminder = async () => {
     try {
@@ -237,6 +434,52 @@ function App() {
         >
           {t('managePrompts')}
         </button>
+
+        <div className='rounded-lg shadow p-3 bg-white dark:bg-gray-800 transition-colors duration-200'>
+          <div className='flex items-center justify-between flex-wrap gap-2 mb-2'>
+            <div>
+              <h2 className='text-sm font-semibold m-0 text-gray-800 dark:text-gray-100'>{t('popupExtractQuestionsTitle')}</h2>
+              <p className='text-xs text-gray-500 dark:text-gray-400 m-0'>{t('popupExtractQuestionsSubtitle')}</p>
+            </div>
+            <div className='flex items-center gap-2'>
+              <button
+                onClick={handleExtractQuestions}
+                disabled={extractingQuestions}
+                className='bg-blue-600 text-white px-3 py-1.5 rounded-md text-xs font-medium hover:bg-blue-700 disabled:opacity-60 disabled:cursor-not-allowed dark:bg-blue-700 dark:hover:bg-blue-800 transition-colors duration-200'
+              >
+                {extractingQuestions ? t('popupExtractQuestionsWorking') : t('popupExtractQuestionsButton')}
+              </button>
+              <button
+                onClick={handleClearQuestions}
+                className='border border-gray-300 dark:border-gray-600 text-gray-600 dark:text-gray-200 px-3 py-1.5 rounded-md text-xs font-medium hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-200'
+              >
+                {t('popupClearQuestionsButton')}
+              </button>
+            </div>
+          </div>
+
+          {extractQuestionsError && (
+            <div className='text-xs text-red-500 dark:text-red-400 mb-2 leading-relaxed'>
+              {extractQuestionsError}
+            </div>
+          )}
+
+          <div className='max-h-48 overflow-y-auto border border-gray-100 dark:border-gray-700 rounded-md p-2 bg-gray-50 dark:bg-gray-900/40'>
+            {extractedQuestions.length === 0 ? (
+              <p className='text-xs text-gray-500 dark:text-gray-400 m-0'>{t('popupExtractQuestionsEmpty')}</p>
+            ) : (
+              <ol className='list-none m-0 p-0 space-y-2'>
+                {extractedQuestions.map((question, index) => (
+                  <li
+                    key={`question-${index}`}
+                    className='text-xs text-gray-700 dark:text-gray-200 leading-relaxed'
+                    dangerouslySetInnerHTML={{ __html: question }}
+                  />
+                ))}
+              </ol>
+            )}
+          </div>
+        </div>
 
         {/* 快捷方式提示区域 */}
         <div className='mt-3 rounded-lg bg-gray-50 dark:bg-gray-800 p-3 shadow-sm'>
