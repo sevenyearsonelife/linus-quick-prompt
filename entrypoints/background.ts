@@ -38,7 +38,9 @@ export default defineBackground(() => {
   initializeDefaultData();
 
   // Setup all the modular components
-  createContextMenus();
+  createContextMenus().catch(error => {
+    console.error('背景脚本: 创建右键菜单失败', error)
+  });
   setupNotificationHandlers();
   setupStorageChangeListeners();
 

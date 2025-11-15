@@ -1,7 +1,13 @@
 import { t } from "@/utils/i18n"
 
 // Create context menu items
-export const createContextMenus = (): void => {
+export const createContextMenus = async (): Promise<void> => {
+  try {
+    await browser.contextMenus.removeAll()
+  } catch (error) {
+    console.warn('背景脚本: 清理旧的右键菜单失败', error)
+  }
+
   // 创建插件图标右键菜单项
   browser.contextMenus.create({
     id: 'open-options',
