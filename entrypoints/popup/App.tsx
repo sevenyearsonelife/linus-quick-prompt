@@ -101,6 +101,12 @@ function App() {
     return (container.textContent || container.innerText || '').replace(/\s+/g, ' ').trim()
   }
 
+  const formatQuestionWithIndex = (text: string, index: number): string => {
+    const NBSP = '\u00A0'
+    const stripped = text.replace(/^\d+[\.\)、]\s*/, '').trim()
+    return `${index}.${NBSP}${stripped}`
+  }
+
   const extractQuestionsInTab = async (tabId: number): Promise<string[]> => {
     const scripting = (browser as any)?.scripting
     if (!scripting?.executeScript) {
@@ -287,13 +293,14 @@ function App() {
     setExtractQuestionsError(null)
   }
 
-  const handleQuestionClick = async (questionHtml: string) => {
+  const handleQuestionClick = async (questionHtml: string, displayIndex: number) => {
     try {
       const plainText = htmlToPlainText(questionHtml)
       if (!plainText) {
         setExtractQuestionsError(t('popupSendQuestionFailed'))
         return
       }
+      const finalText = formatQuestionWithIndex(plainText, displayIndex)
       setExtractQuestionsError(null)
       const tabId = await getActiveTabId()
       if (!tabId) {
@@ -301,7 +308,7 @@ function App() {
       }
       await sendMessageWithAutoInjection(tabId, {
         action: 'insertPrompt',
-        text: plainText
+        text: finalText
       })
     } catch (err: any) {
       console.error('弹出窗口：发送问题失败', err)
@@ -432,13 +439,13 @@ function App() {
                   <li
                     key={`question-${index}`}
                     className='text-sm text-gray-700 dark:text-gray-200 leading-relaxed p-2 rounded-md bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-150'
-                    onClick={() => handleQuestionClick(question)}
+                    onClick={() => handleQuestionClick(question, index + 1)}
                     role='button'
                     tabIndex={0}
                     onKeyDown={(e) => {
                       if (e.key === 'Enter' || e.key === ' ') {
                         e.preventDefault()
-                        handleQuestionClick(question)
+                        handleQuestionClick(question, index + 1)
                       }
                     }}
                     dangerouslySetInnerHTML={{ __html: question }}
