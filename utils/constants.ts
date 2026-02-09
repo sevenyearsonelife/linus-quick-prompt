@@ -67,4 +67,28 @@ export const DEFAULT_PROMPTS: PromptItem[] = [
     enabled: true,
     categoryId: "programming",
   },
+  {
+    id: "default-content-summary",
+    title: "内容总结",
+    content: "请将以下内容总结为3个要点，并给出1条可执行建议：\n\n",
+    tags: ["总结", "写作"],
+    enabled: true,
+    categoryId: "default",
+  },
+  {
+    id: "default-cn-en-translate",
+    title: "中英翻译",
+    content: "请将以下中文翻译为自然的英文，保持专业语气：\n\n",
+    tags: ["翻译", "英文"],
+    enabled: true,
+    categoryId: "default",
+  },
+  {
+    id: "default-code-review",
+    title: "代码审查",
+    content: "请从可读性、性能和潜在Bug三个维度审查以下代码，并给出修改建议：\n\n",
+    tags: ["编程", "代码审查"],
+    enabled: true,
+    categoryId: "programming",
+  },
 ];

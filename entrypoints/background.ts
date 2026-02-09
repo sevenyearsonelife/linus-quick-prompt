@@ -1,6 +1,7 @@
 import { BROWSER_STORAGE_KEY, DEFAULT_PROMPTS } from "@/utils/constants"
 import { initializeDefaultCategories, migratePromptsWithCategory } from "@/utils/categoryUtils"
 import { t } from "@/utils/i18n"
+import type { PromptItem } from "@/utils/types"
 
 // Import extracted modules
 import { checkShortcutConfiguration, handleCommand } from "@/utils/browser/shortcutManager"
@@ -19,10 +20,31 @@ export default defineBackground(() => {
       await migratePromptsWithCategory();
 
       const promptsResult = await browser.storage.local.get(BROWSER_STORAGE_KEY);
-      const prompts = promptsResult[BROWSER_STORAGE_KEY as keyof typeof promptsResult];
+      const prompts = promptsResult[BROWSER_STORAGE_KEY as keyof typeof promptsResult] as PromptItem[] | undefined;
 
       if (prompts && Array.isArray(prompts) && prompts.length > 0) {
-        console.log('背景脚本: 已存在Prompts数据，无需初始化默认提示词');
+        const existingIds = new Set(prompts.map((prompt) => prompt.id));
+        const maxSortOrder = prompts.reduce((max, prompt) => {
+          const current = prompt.sortOrder ?? -1;
+          return current > max ? current : max;
+        }, -1);
+
+        const missingDefaultPrompts = DEFAULT_PROMPTS
+          .filter((prompt) => !existingIds.has(prompt.id))
+          .map((prompt, index) => ({
+            ...prompt,
+            sortOrder: maxSortOrder + index + 1,
+            lastModified: new Date().toISOString(),
+          }));
+
+        if (missingDefaultPrompts.length > 0) {
+          const dataToStore: Record<string, any> = {};
+          dataToStore[BROWSER_STORAGE_KEY] = [...prompts, ...missingDefaultPrompts];
+          await browser.storage.local.set(dataToStore);
+          console.log(`背景脚本: 已补齐 ${missingDefaultPrompts.length} 条默认提示词`);
+        } else {
+          console.log('背景脚本: 已存在Prompts数据，无需初始化默认提示词');
+        }
       } else {
         const dataToStore: Record<string, any> = {};
         dataToStore[BROWSER_STORAGE_KEY] = DEFAULT_PROMPTS;
