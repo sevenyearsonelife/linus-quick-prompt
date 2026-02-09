@@ -1,9 +1,6 @@
 import { useEffect, useState, useRef } from "react";
 import { HashRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import PromptManager from "./components/PromptManager";
-import NotionIntegrationPage from "./components/NotionIntegrationPage";
-import GoogleAuthPage from "./components/GoogleAuthPage";
-import ToastContainer from "./components/ToastContainer";
 import "./App.css";
 import "~/assets/tailwind.css";
 import { t } from "~/utils/i18n";
@@ -84,8 +81,6 @@ const App = () => {
             <Route path="/" element={<PromptManager />} />
             <Route path="/categories" element={<Navigate to="/" replace />} />
             <Route path="/settings" element={<Navigate to="/" replace />} />
-            <Route path="/integrations/notion" element={<NotionIntegrationPage />} />
-            <Route path="/integrations/google" element={<GoogleAuthPage />} />
           </Routes>
 
           {/* 回到顶部按钮 */}
@@ -114,8 +109,6 @@ const App = () => {
             </div>
           )}
           
-          {/* 添加Toast通知容器 */}
-          <ToastContainer />
         </div>
       </div>
     </Router>

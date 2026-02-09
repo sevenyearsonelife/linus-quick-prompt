@@ -22,7 +22,6 @@ export interface PromptItem {
   enabled: boolean;
   categoryId: string;
   pinned?: boolean; // 置顶字段
-  notionPageId?: string;
   notes?: string; // 备注字段
   lastModified?: string; // 最后修改时间（ISO 字符串）
   sortOrder?: number; // 排序字段，用于拖拽排序

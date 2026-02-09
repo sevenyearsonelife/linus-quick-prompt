@@ -1,6 +1,5 @@
 import { BROWSER_STORAGE_KEY, DEFAULT_PROMPTS } from "@/utils/constants"
 import { initializeDefaultCategories, migratePromptsWithCategory } from "@/utils/categoryUtils"
-import { t } from "@/utils/i18n"
 import type { PromptItem } from "@/utils/types"
 
 // Import extracted modules
@@ -25,7 +24,6 @@ const LEGACY_DEFAULT_PROMPT_IDS = new Set([
 export default defineBackground(() => {
   console.log('Hello background!', { id: browser.runtime.id })
 
-  // Initialization logic (Modified to include Notion sync setting)
   const initializeDefaultData = async () => {
     try {
       await initializeDefaultCategories();
@@ -64,7 +62,7 @@ export default defineBackground(() => {
         const dataToStore: Record<string, any> = {};
         dataToStore[BROWSER_STORAGE_KEY] = DEFAULT_PROMPTS;
         await browser.storage.local.set(dataToStore);
-        console.log(t('backgroundNotionSyncInitialized'));
+        console.log('背景脚本: 默认提示词初始化完成');
       }
     } catch (error) {
       console.error('背景脚本: 初始化默认数据失败:', error);
@@ -90,8 +88,7 @@ export default defineBackground(() => {
     if (details.reason === 'install') {
       console.log('背景脚本: 扩展首次安装');
       await initializeDefaultData();
-      await browser.storage.sync.set({ notionSyncToNotionEnabled: false });
-      console.log(t('backgroundNotionSyncInitialized'));
+      console.log('背景脚本: 首次安装初始化完成');
 
       // 安装后延迟一下再检测快捷键，确保扩展完全加载
       setTimeout(async () => {
