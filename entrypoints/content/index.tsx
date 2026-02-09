@@ -14,6 +14,12 @@ export default defineContentScript({
     // 记录上次输入的状态
     let lastInputValue = ''
     let isPromptSelectorOpen = false
+    let extensionContextInvalidated = false
+
+    const isContextInvalidatedError = (error: unknown): boolean => {
+      const message = error instanceof Error ? error.message : String(error)
+      return message.includes('Extension context invalidated')
+    }
 
     const isAiStudioPage = (): boolean => {
       return window.location.hostname.includes('aistudio.google.com')
@@ -488,6 +494,10 @@ export default defineContentScript({
     // 通用函数：打开选项页并传递选中的文本
     const openOptionsWithText = async (text: string) => {
       try {
+        if (extensionContextInvalidated) {
+          return false
+        }
+
         // 不直接使用tabs API，而是发送消息给背景脚本
         const response = await browser.runtime.sendMessage({
           action: 'openOptionsPageWithText',
@@ -497,6 +507,10 @@ export default defineContentScript({
         console.log('内容脚本: 已请求背景脚本打开选项页', response)
         return response && response.success
       } catch (error) {
+        if (isContextInvalidatedError(error)) {
+          extensionContextInvalidated = true
+          return false
+        }
         console.error('内容脚本: 请求打开选项页失败:', error)
         return false
       }
@@ -505,6 +519,7 @@ export default defineContentScript({
     // 通用函数：打开提示词选择器
     const openPromptSelector = async (inputElement?: EditableElement) => {
       if (isPromptSelectorOpen) return
+      if (extensionContextInvalidated) return
 
       try {
         isPromptSelectorOpen = true
@@ -566,6 +581,11 @@ export default defineContentScript({
           isPromptSelectorOpen = false
         }
       } catch (error) {
+        if (isContextInvalidatedError(error)) {
+          extensionContextInvalidated = true
+          isPromptSelectorOpen = false
+          return
+        }
         console.error(t('errorGettingPrompts'), error)
         isPromptSelectorOpen = false
       }
