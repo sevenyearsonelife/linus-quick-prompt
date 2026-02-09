@@ -577,52 +577,6 @@ const PromptManager = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-cyan-50 to-teal-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="mb-10">
-          <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6">
-            <div className="space-y-2">
-              <div className="flex items-center space-x-3">
-                <div className="w-10 h-10 bg-gradient-to-br from-cyan-500 to-teal-600 rounded-xl flex items-center justify-center shadow-lg">
-                  <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 9l3 3-3 3m5 0h3" />
-                  </svg>
-                </div>
-                <h1 className="text-4xl font-bold bg-gradient-to-r from-gray-900 via-cyan-900 to-teal-900 dark:from-gray-100 dark:via-cyan-100 dark:to-teal-100 bg-clip-text text-transparent">
-                  {t('promptLibrary')}
-                </h1>
-              </div>
-              <p className="text-lg text-gray-600 dark:text-gray-300 max-w-2xl">
-                {t('appDescription')}
-              </p>
-              
-              {/* 统计卡片 */}
-              <div className="flex flex-wrap gap-4 mt-6">
-                <div className="bg-white/70 dark:bg-gray-800/70 backdrop-blur-sm border border-white/20 dark:border-gray-700/50 rounded-2xl px-4 py-3 shadow-sm">
-                  <div className="flex items-center space-x-2">
-                    <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                    <span className="text-sm font-medium text-gray-700 dark:text-gray-300">{t('totalCount', [prompts.length.toString()])}</span>
-                  </div>
-                </div>
-                <div className="bg-white/70 dark:bg-gray-800/70 backdrop-blur-sm border border-white/20 dark:border-gray-700/50 rounded-2xl px-4 py-3 shadow-sm">
-                  <div className="flex items-center space-x-2">
-                    <div className="w-2 h-2 bg-cyan-500 rounded-full"></div>
-                    <span className="text-sm font-medium text-gray-700 dark:text-gray-300">{t('enabledCount', [prompts.filter(p => p.enabled).length.toString()])}</span>
-                  </div>
-                </div>
-                {selectedCategoryId && (
-                  <div className="bg-white/70 dark:bg-gray-800/70 backdrop-blur-sm border border-white/20 dark:border-gray-700/50 rounded-2xl px-4 py-3 shadow-sm">
-                    <div className="flex items-center space-x-2">
-                      <div className="w-2 h-2 bg-cyan-500 rounded-full"></div>
-                      <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                        {t('currentCategoryCount', [filteredPrompts.length.toString()])}
-                      </span>
-                    </div>
-                  </div>
-                )}
-              </div>
-            </div>
-          </div>
-        </div>
-
         {/* 错误提示 */}
         {error && (
           <div className="mb-6 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800/50 rounded-2xl p-4 shadow-sm">
