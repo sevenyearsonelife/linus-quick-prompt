@@ -1,6 +1,5 @@
 import { useEffect, useState, useRef } from "react";
 import { HashRouter as Router, Routes, Route, Navigate } from "react-router-dom";
-import Sidebar from "./components/Sidebar";
 import PromptManager from "./components/PromptManager";
 import NotionIntegrationPage from "./components/NotionIntegrationPage";
 import GoogleAuthPage from "./components/GoogleAuthPage";
@@ -77,58 +76,46 @@ const App = () => {
   return (
     <Router>
       <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-200">
-        <div className="flex h-screen">
-          {/* 侧边栏 */}
-          <Sidebar />
-          
-          {/* 主内容区域 */}
-          <main className="flex-1 flex flex-col min-w-0 md:relative">
-            {/* 移动端顶部空间（为汉堡菜单留出空间） */}
-            <div className="md:hidden h-16 flex-shrink-0 bg-gray-50 dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700"></div>
-            
-            {/* 主要内容区域 */}
-            <div 
-              ref={scrollContainerRef}
-              className="flex-1 overflow-auto bg-gray-50 dark:bg-gray-900 relative"
-            >
-              <Routes>
-                <Route path="/" element={<PromptManager />} />
-                <Route path="/categories" element={<Navigate to="/" replace />} />
-                <Route path="/settings" element={<Navigate to="/" replace />} />
-                <Route path="/integrations/notion" element={<NotionIntegrationPage />} />
-                <Route path="/integrations/google" element={<GoogleAuthPage />} />
-              </Routes>
+        <div 
+          ref={scrollContainerRef}
+          className="h-screen overflow-auto bg-gray-50 dark:bg-gray-900 relative"
+        >
+          <Routes>
+            <Route path="/" element={<PromptManager />} />
+            <Route path="/categories" element={<Navigate to="/" replace />} />
+            <Route path="/settings" element={<Navigate to="/" replace />} />
+            <Route path="/integrations/notion" element={<NotionIntegrationPage />} />
+            <Route path="/integrations/google" element={<GoogleAuthPage />} />
+          </Routes>
 
-              {/* 回到顶部按钮 */}
-              {showBackToTop && (
-                <div className="fixed bottom-6 right-6 z-[9999]">
-                  <button
-                    onClick={scrollToTop}
-                    className="bg-cyan-600 hover:bg-cyan-700 text-white p-3 rounded-full shadow-lg transition-all duration-300 transform hover:scale-110 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:ring-offset-2"
-                    title={t('backToTop')}
-                    aria-label={t('backToTop')}
-                  >
-                    <svg
-                      className="w-6 h-6"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth="2"
-                        d="M5 10l7-7m0 0l7 7m-7-7v18"
-                      />
-                    </svg>
-                  </button>
-                </div>
-              )}
-              
-              {/* 添加Toast通知容器 */}
-              <ToastContainer />
+          {/* 回到顶部按钮 */}
+          {showBackToTop && (
+            <div className="fixed bottom-6 right-6 z-[9999]">
+              <button
+                onClick={scrollToTop}
+                className="bg-cyan-600 hover:bg-cyan-700 text-white p-3 rounded-full shadow-lg transition-all duration-300 transform hover:scale-110 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:ring-offset-2"
+                title={t('backToTop')}
+                aria-label={t('backToTop')}
+              >
+                <svg
+                  className="w-6 h-6"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M5 10l7-7m0 0l7 7m-7-7v18"
+                  />
+                </svg>
+              </button>
             </div>
-          </main>
+          )}
+          
+          {/* 添加Toast通知容器 */}
+          <ToastContainer />
         </div>
       </div>
     </Router>
