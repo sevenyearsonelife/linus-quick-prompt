@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react'
-import { Link } from 'react-router-dom'
 import type { PromptItem, Category } from '@/utils/types'
 import { getCategories } from '@/utils/categoryUtils'
 import { DEFAULT_CATEGORY_ID } from '@/utils/constants'
@@ -200,12 +199,6 @@ const PromptForm = ({ onSubmit, initialData, onCancel, isEditing }: PromptFormPr
           {categories.length === 0 && !loadingCategories && (
             <p className='mt-1 text-sm text-gray-500'>
               {t('noAvailableCategories')}
-              <Link 
-                to='/categories' 
-                className='text-cyan-600 hover:text-cyan-800 ml-1'
-              >
-                {t('createCategory')}
-              </Link>
             </p>
           )}
         </div>

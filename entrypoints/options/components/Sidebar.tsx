@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { NavLink } from "react-router-dom";
-import Logo from "~/assets/icon.png";
 import { t } from '../../../utils/i18n';
 
 interface SidebarProps {
@@ -48,52 +47,6 @@ const Sidebar: React.FC<SidebarProps> = ({ className = "" }) => {
         </svg>
       ),
       description: t('promptManagementDescription'),
-    },
-    {
-      path: "/categories",
-      name: t('categoryManagement'),
-      icon: (
-        <svg
-          className="w-5 h-5"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth="2"
-            d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"
-          />
-        </svg>
-      ),
-      description: t('promptCategoryManagement'),
-    },
-    {
-      path: "/settings",
-      name: t('globalSettings'),
-      icon: (
-        <svg
-          className="w-5 h-5"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth="2"
-            d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"
-          />
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth="2"
-            d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-          />
-        </svg>
-      ),
-      description: t('globalSettingsDescription'),
     },
   ];
 
@@ -184,49 +137,6 @@ const Sidebar: React.FC<SidebarProps> = ({ className = "" }) => {
                 </button>
               </div>
             )}
-
-            {/* Logo/Title */}
-            <div className="mb-6">
-              <NavLink 
-                to="/" 
-                onClick={closeSidebar}
-                className="block overflow-hidden relative p-4 bg-gradient-to-br from-gray-50 to-gray-100 rounded-xl border border-gray-200 shadow-sm transition-all duration-200 dark:from-gray-800 dark:to-gray-700 dark:border-gray-600 hover:from-gray-100 hover:to-gray-150 dark:hover:from-gray-700 dark:hover:to-gray-600 group hover:shadow-md"
-              >
-                {/* 背景装饰渐变 */}
-                <div className="absolute inset-0 bg-gradient-to-br opacity-0 transition-opacity duration-300 from-cyan-500/5 to-sky-500/5 dark:from-cyan-400/10 dark:to-sky-400/10 group-hover:opacity-100"></div>
-                
-                {/* 装饰性光点群 */}
-                <div className="absolute top-2 right-2 w-2 h-2 bg-cyan-400 rounded-full opacity-60 transition-all duration-300 group-hover:opacity-80 group-hover:scale-110"></div>
-                <div className="absolute top-4 right-4 w-1.5 h-1.5 bg-sky-400 rounded-full opacity-50 group-hover:opacity-70 transition-all duration-300 group-hover:scale-125"></div>
-                <div className="absolute top-6 right-6 w-1 h-1 bg-cyan-300 rounded-full opacity-40 transition-all duration-300 group-hover:opacity-60"></div>
-                <div className="absolute bottom-3 left-3 w-1.5 h-1.5 bg-cyan-400 rounded-full opacity-30 group-hover:opacity-50 transition-all duration-300 group-hover:scale-110"></div>
-                <div className="absolute bottom-5 left-5 w-1 h-1 bg-teal-400 rounded-full opacity-25 transition-all duration-300 group-hover:opacity-40"></div>
-                
-                {/* 微妙的几何装饰 */}
-                <div className="absolute top-1 left-1 w-3 h-3 rounded-full border border-cyan-200 opacity-20 transition-opacity duration-300 dark:border-cyan-600 group-hover:opacity-40"></div>
-                <div className="absolute right-1 bottom-1 w-2 h-2 rounded-sm border border-sky-200 transition-opacity duration-300 rotate-45 dark:border-sky-600 opacity-15 group-hover:opacity-30"></div>
-                
-                <div className="flex relative z-10 flex-col items-center space-y-3">
-                  {/* Logo */}
-                  <div className="relative transition-all duration-200 ease-out transform group-hover:scale-105">
-                    {/* Logo光晕效果 */}
-                    <div className="absolute inset-0 rounded-xl opacity-0 blur-md transition-opacity duration-300 scale-110 bg-cyan-400/20 group-hover:opacity-100"></div>
-                    <img
-                      src={Logo}
-                      alt="Linus Prompt Logo"
-                      className="relative z-10 w-14 h-14 rounded-xl"
-                    />
-                  </div>
-
-                  {/* 品牌名称 */}
-                  <div className="relative text-center">
-                    <h1 className="text-lg font-bold text-transparent bg-clip-text bg-gradient-to-r from-gray-800 to-gray-600 transition-all duration-300 dark:from-gray-100 dark:to-gray-300 group-hover:from-cyan-700 group-hover:to-sky-600 dark:group-hover:from-cyan-300 dark:group-hover:to-sky-200">
-                      Linus Prompt
-                    </h1>
-                  </div>
-                </div>
-              </NavLink>
-            </div>
 
             {/* Navigation */}
             <nav className="space-y-2">

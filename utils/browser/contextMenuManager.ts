@@ -15,12 +15,6 @@ export const createContextMenus = async (): Promise<void> => {
     contexts: ['action'], // 插件图标右键菜单
   })
 
-  browser.contextMenus.create({
-    id: 'category-management',
-    title: t('categoryManagement'),
-    contexts: ['action'],
-  })
-
   // 创建页面内容右键菜单项
   browser.contextMenus.create({
     id: 'save-prompt',
@@ -47,10 +41,6 @@ export const handleContextMenuClick = async (info: Browser.contextMenus.OnClickD
   } else if (info.menuItemId === 'open-options') {
     // 打开选项页
     const optionsUrl = browser.runtime.getURL('/options.html')
-    await browser.tabs.create({ url: optionsUrl })
-  } else if (info.menuItemId === 'category-management') {
-    // 打开分类管理页
-    const optionsUrl = browser.runtime.getURL('/options.html#/categories')
     await browser.tabs.create({ url: optionsUrl })
   }
 };
