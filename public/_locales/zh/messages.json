@@ -1072,7 +1072,7 @@
     "message": "Notion 集成"
   },
   "notionIntegrationDescription": {
-    "message": "通过 Notion API 集成，您可以在 Quick Prompt 与 Notion 数据库之间同步您的提示词库，实现跨平台的数据共享和备份。"
+    "message": "通过 Notion API 集成，您可以在 Linus Prompt 与 Notion 数据库之间同步您的提示词库，实现跨平台的数据共享和备份。"
   },
   "titleCannotBeEmpty": {
     "message": "标题不能为空"
@@ -1155,7 +1155,7 @@
     }
   },
   "googleAuthDescription": {
-    "message": "连接您的 Google 账号，以便在使用 Quick Prompt 时获得更多功能，例如云同步、跨设备访问等。"
+    "message": "连接您的 Google 账号，以便在使用 Linus Prompt 时获得更多功能，例如云同步、跨设备访问等。"
   },
   "accountAuthentication": {
     "message": "账号认证"

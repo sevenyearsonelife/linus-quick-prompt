@@ -24,7 +24,7 @@ export const setupNotificationHandlers = (): void => {
               await browser.notifications.create('firefox-shortcut-tip', {
                 type: 'basic',
                 iconUrl: '/icon/32.png',
-                title: 'Quick Prompt - 设置提示',
+                title: 'Linus Prompt - 设置提示',
                 message: t('shortcutSetupTip')
               });
             }, 1000);

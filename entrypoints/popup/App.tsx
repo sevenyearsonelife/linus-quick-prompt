@@ -413,7 +413,7 @@ function App() {
       <div className='flex justify-center items-center mb-3'>
         <img src={Logo} className='h-8 mr-2' alt='quick prompt logo' />
         <h1 className='text-lg font-bold whitespace-nowrap m-0 p-0 leading-normal dark:text-white'>
-          Quick Prompt
+          Linus Prompt
         </h1>
       </div>
 

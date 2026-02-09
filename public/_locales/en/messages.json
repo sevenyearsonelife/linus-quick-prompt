@@ -1069,7 +1069,7 @@
     "message": "Notion Integration"
   },
   "notionIntegrationDescription": {
-    "message": "Through Notion API integration, you can sync your prompt library between Quick Prompt and Notion database, enabling cross-platform data sharing and backup."
+    "message": "Through Notion API integration, you can sync your prompt library between Linus Prompt and Notion database, enabling cross-platform data sharing and backup."
   },
   "titleCannotBeEmpty": {
     "message": "Title cannot be empty"
@@ -1155,7 +1155,7 @@
     }
   },
   "googleAuthDescription": {
-    "message": "Connect your Google account to access more features when using Quick Prompt, such as cloud sync, cross-device access, and more."
+    "message": "Connect your Google account to access more features when using Linus Prompt, such as cloud sync, cross-device access, and more."
   },
   "accountAuthentication": {
     "message": "Account Authentication"

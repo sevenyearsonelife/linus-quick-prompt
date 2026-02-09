@@ -27,7 +27,7 @@ export default defineConfig({
     console.log("finalWebClientId", finalWebClientId);
 
     return {
-      name: "Quick Prompt",
+      name: "Linus Prompt",
       description: '__MSG_appDescription__',
       default_locale: "en",
       // https://developer.chrome.com/docs/extensions/how-to/integrate/oauth?hl=zh-cn#keep-consistent-id

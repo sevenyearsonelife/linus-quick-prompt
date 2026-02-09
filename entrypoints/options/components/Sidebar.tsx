@@ -213,7 +213,7 @@ const Sidebar: React.FC<SidebarProps> = ({ className = "" }) => {
                     <div className="absolute inset-0 rounded-xl opacity-0 blur-md transition-opacity duration-300 scale-110 bg-cyan-400/20 group-hover:opacity-100"></div>
                     <img
                       src={Logo}
-                      alt="Quick Prompt Logo"
+                      alt="Linus Prompt Logo"
                       className="relative z-10 w-14 h-14 rounded-xl"
                     />
                   </div>
@@ -221,7 +221,7 @@ const Sidebar: React.FC<SidebarProps> = ({ className = "" }) => {
                   {/* 品牌名称 */}
                   <div className="relative text-center">
                     <h1 className="text-lg font-bold text-transparent bg-clip-text bg-gradient-to-r from-gray-800 to-gray-600 transition-all duration-300 dark:from-gray-100 dark:to-gray-300 group-hover:from-cyan-700 group-hover:to-sky-600 dark:group-hover:from-cyan-300 dark:group-hover:to-sky-200">
-                      Quick Prompt
+                      Linus Prompt
                     </h1>
                   </div>
                 </div>
@@ -262,4 +262,3 @@ const Sidebar: React.FC<SidebarProps> = ({ className = "" }) => {
 };
 
 export default Sidebar;
-
