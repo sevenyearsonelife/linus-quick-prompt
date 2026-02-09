@@ -10,6 +10,12 @@ import { setupNotificationHandlers } from "@/utils/browser/notificationManager"
 import { setupStorageChangeListeners } from "@/utils/browser/storageManager"
 import { handleRuntimeMessage } from "@/utils/browser/messageHandler"
 
+const LEGACY_DEFAULT_PROMPT_IDS = new Set([
+  "default-ghibli",
+  "default-code-explain",
+  "default-role-template",
+]);
+
 export default defineBackground(() => {
   console.log('Hello background!', { id: browser.runtime.id })
 
@@ -23,8 +29,11 @@ export default defineBackground(() => {
       const prompts = promptsResult[BROWSER_STORAGE_KEY as keyof typeof promptsResult] as PromptItem[] | undefined;
 
       if (prompts && Array.isArray(prompts) && prompts.length > 0) {
-        const existingIds = new Set(prompts.map((prompt) => prompt.id));
-        const maxSortOrder = prompts.reduce((max, prompt) => {
+        const promptsWithoutLegacy = prompts.filter((prompt) => !LEGACY_DEFAULT_PROMPT_IDS.has(prompt.id));
+        const removedLegacyCount = prompts.length - promptsWithoutLegacy.length;
+
+        const existingIds = new Set(promptsWithoutLegacy.map((prompt) => prompt.id));
+        const maxSortOrder = promptsWithoutLegacy.reduce((max, prompt) => {
           const current = prompt.sortOrder ?? -1;
           return current > max ? current : max;
         }, -1);
@@ -37,11 +46,11 @@ export default defineBackground(() => {
             lastModified: new Date().toISOString(),
           }));
 
-        if (missingDefaultPrompts.length > 0) {
+        if (removedLegacyCount > 0 || missingDefaultPrompts.length > 0) {
           const dataToStore: Record<string, any> = {};
-          dataToStore[BROWSER_STORAGE_KEY] = [...prompts, ...missingDefaultPrompts];
+          dataToStore[BROWSER_STORAGE_KEY] = [...promptsWithoutLegacy, ...missingDefaultPrompts];
           await browser.storage.local.set(dataToStore);
-          console.log(`背景脚本: 已补齐 ${missingDefaultPrompts.length} 条默认提示词`);
+          console.log(`背景脚本: 已清理 ${removedLegacyCount} 条旧默认提示词，补齐 ${missingDefaultPrompts.length} 条默认提示词`);
         } else {
           console.log('背景脚本: 已存在Prompts数据，无需初始化默认提示词');
         }

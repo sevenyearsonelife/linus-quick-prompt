@@ -191,31 +191,40 @@ export function getPromptSelectorStyles(): string {
       -webkit-overflow-scrolling: touch !important;
     }
 
+    .qp-prompts-grid {
+      display: grid !important;
+      grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+      gap: 10px !important;
+      padding: 10px !important;
+      align-content: start !important;
+    }
+
     /* 提示项样式 */
     .qp-prompt-item {
-      padding: 12px 20px !important;
-      border-left: 2px solid transparent !important;
+      padding: 12px 14px !important;
+      border: 1px solid var(--qp-border-color) !important;
+      border-left: 1px solid var(--qp-border-color) !important;
+      border-radius: 8px !important;
       transition: all 0.25s ease-out !important;
-      border-bottom: 1px solid var(--qp-border-color) !important;
       background-color: var(--qp-bg-primary) !important;
       position: relative !important;
     }
 
     .qp-prompt-item:last-child {
-      border-bottom: none !important;
       margin-bottom: 0 !important;
     }
 
     /* 只在非键盘导航模式下显示hover效果 */
     :host(:not([data-keyboard-nav])) .qp-prompt-item:hover {
       background-color: var(--qp-bg-hover) !important;
-      transform: translateX(1px) !important;
+      transform: translateY(-1px) !important;
     }
 
     .qp-prompt-item.qp-selected {
       background-color: var(--qp-bg-selected) !important;
-      border-left: 2px solid var(--qp-accent) !important;
-      transform: translateX(1px) !important;
+      border-color: var(--qp-accent) !important;
+      transform: translateY(-1px) !important;
+      box-shadow: 0 0 0 2px var(--qp-shadow-color) !important;
       position: relative !important;
     }
 
@@ -240,7 +249,10 @@ export function getPromptSelectorStyles(): string {
       line-height: 1.4 !important;
       overflow: hidden !important;
       text-overflow: ellipsis !important;
-      white-space: nowrap !important;
+      white-space: normal !important;
+      display: -webkit-box !important;
+      -webkit-line-clamp: 2 !important;
+      -webkit-box-orient: vertical !important;
       margin-bottom: 8px !important;
     }
 
@@ -342,7 +354,7 @@ export function getPromptSelectorStyles(): string {
     /* 确保选中和未选中项的边框一致 */
     .qp-prompt-item,
     .qp-prompt-item.qp-selected {
-      border-left-width: 2px !important;
+      border-left-width: 1px !important;
     }
 
     /* 搜索输入框样式 */

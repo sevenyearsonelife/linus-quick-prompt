@@ -512,7 +512,7 @@ const PromptSelector: React.FC<PromptSelectorProps> = ({
           className="qp-overflow-auto qp-modal-content qp-custom-scrollbar"
         >
           {filteredPrompts.length > 0 ? (
-            <>
+            <div className="qp-prompts-grid">
               {filteredPrompts.map((prompt, index) => {
                 const category = categoriesMap[prompt.categoryId];
                 return (
@@ -568,7 +568,7 @@ const PromptSelector: React.FC<PromptSelectorProps> = ({
                   </div>
                 );
               })}
-            </>
+            </div>
           ) : (
             <div className="qp-empty-state">
               <svg
