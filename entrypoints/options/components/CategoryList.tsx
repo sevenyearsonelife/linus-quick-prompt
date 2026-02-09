@@ -80,13 +80,13 @@ const CategoryList = ({
             <div className='flex items-center'>
               <div
                 className='w-4 h-4 rounded-full mr-3 flex-shrink-0'
-                style={{ backgroundColor: category.color || '#6366f1' }}
+                style={{ backgroundColor: category.color || '#06b6d4' }}
               />
               <h3 className='text-lg font-semibold text-gray-800 dark:text-gray-200 truncate flex-1'>
                 {category.name}
               </h3>
               {category.id === DEFAULT_CATEGORY_ID && (
-                <span className='ml-2 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 dark:bg-blue-900/50 text-blue-800 dark:text-blue-300'>
+                <span className='ml-2 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-cyan-100 dark:bg-cyan-900/50 text-cyan-800 dark:text-cyan-300'>
                   {t('default')}
                 </span>
               )}
@@ -134,7 +134,7 @@ const CategoryList = ({
                     onChange={(e) => onToggleEnabled(category.id, e.target.checked)}
                     className='sr-only peer'
                   />
-                  <div className='relative w-9 h-5 bg-gray-200 dark:bg-gray-600 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-600 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[""] after:absolute after:top-1/2 after:right-1/2 after:-translate-y-1/2 after:bg-white after:border-gray-300 dark:after:border-gray-600 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-blue-600'></div>
+                  <div className='relative w-9 h-5 bg-gray-200 dark:bg-gray-600 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-cyan-300 dark:peer-focus:ring-cyan-600 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[""] after:absolute after:top-1/2 after:right-1/2 after:-translate-y-1/2 after:bg-white after:border-gray-300 dark:after:border-gray-600 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-cyan-600'></div>
                   <span className='ml-2 text-xs text-gray-600 dark:text-gray-300'>
                     {category.enabled ? t('enabled') : t('disabled')}
                   </span>
@@ -147,7 +147,7 @@ const CategoryList = ({
           <div className='px-5 py-3 bg-gray-50 dark:bg-gray-700 border-t border-gray-100 dark:border-gray-600 flex justify-end space-x-2'>
             <button
               onClick={() => onEdit(category.id)}
-              className='px-3 py-1.5 text-sm rounded-md bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-blue-500 transition-colors duration-200'
+              className='px-3 py-1.5 text-sm rounded-md bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-cyan-500 transition-colors duration-200'
             >
               <span className='flex items-center'>
                 <svg

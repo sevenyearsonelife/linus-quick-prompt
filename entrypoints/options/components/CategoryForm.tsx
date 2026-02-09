@@ -12,14 +12,14 @@ interface CategoryFormProps {
 const CategoryForm = ({ onSubmit, initialData, onCancel, isEditing }: CategoryFormProps) => {
   const [name, setName] = useState('')
   const [description, setDescription] = useState('')
-  const [color, setColor] = useState('#6366f1')
+  const [color, setColor] = useState('#06b6d4')
   const [enabled, setEnabled] = useState(true)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
   // 预设颜色选项
   const colorOptions = [
-    { name: t('blue'), value: '#6366f1' },
+    { name: t('blue'), value: '#0ea5e9' },
     { name: t('green'), value: '#10b981' },
     { name: t('yellow'), value: '#f59e0b' },
     { name: t('red'), value: '#ef4444' },
@@ -34,12 +34,12 @@ const CategoryForm = ({ onSubmit, initialData, onCancel, isEditing }: CategoryFo
     if (initialData) {
       setName(initialData.name)
       setDescription(initialData.description || '')
-      setColor(initialData.color || '#6366f1')
+      setColor(initialData.color || '#06b6d4')
       setEnabled(initialData.enabled)
     } else {
       setName('')
       setDescription('')
-      setColor('#6366f1')
+      setColor('#06b6d4')
       setEnabled(true)
     }
     setError(null)
@@ -72,7 +72,7 @@ const CategoryForm = ({ onSubmit, initialData, onCancel, isEditing }: CategoryFo
       if (!isEditing) {
         setName('')
         setDescription('')
-        setColor('#6366f1')
+        setColor('#06b6d4')
         setEnabled(true)
       }
     } catch (err) {
@@ -114,7 +114,7 @@ const CategoryForm = ({ onSubmit, initialData, onCancel, isEditing }: CategoryFo
             id='name'
             value={name}
             onChange={(e) => setName(e.target.value)}
-            className='w-full px-3 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200'
+            className='w-full px-3 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 transition-colors duration-200'
             placeholder={t('categoryExample')}
           />
         </div>
@@ -128,7 +128,7 @@ const CategoryForm = ({ onSubmit, initialData, onCancel, isEditing }: CategoryFo
             value={description}
             onChange={(e) => setDescription(e.target.value)}
             rows={3}
-            className='w-full px-3 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200'
+            className='w-full px-3 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 transition-colors duration-200'
             placeholder={t('descriptionExample')}
           />
         </div>
@@ -149,7 +149,7 @@ const CategoryForm = ({ onSubmit, initialData, onCancel, isEditing }: CategoryFo
                 <div
                   className={`absolute -inset-0.5 rounded-full transition-all duration-200 ease-in-out ${
                     color === option.value
-                      ? 'ring-2 ring-offset-1 ring-indigo-500 dark:ring-indigo-400 opacity-100'
+                      ? 'ring-2 ring-offset-1 ring-teal-500 dark:ring-teal-400 opacity-100'
                       : 'ring-0 ring-offset-0 ring-transparent opacity-0'
                   }`}
                 ></div>
@@ -182,7 +182,7 @@ const CategoryForm = ({ onSubmit, initialData, onCancel, isEditing }: CategoryFo
               onChange={(e) => setEnabled(e.target.checked)}
               className='sr-only peer'
             />
-            <div className='relative w-11 h-6 bg-gray-200 dark:bg-gray-700 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[""] after:absolute after:top-1/2 after:right-1/2 after:-translate-y-1/2 after:bg-white after:border-gray-300 dark:after:border-gray-600 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600'></div>
+            <div className='relative w-11 h-6 bg-gray-200 dark:bg-gray-700 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-cyan-300 dark:peer-focus:ring-cyan-800 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[""] after:absolute after:top-1/2 after:right-1/2 after:-translate-y-1/2 after:bg-white after:border-gray-300 dark:after:border-gray-600 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-cyan-600'></div>
             <span className='ml-3 text-sm font-medium text-gray-700 dark:text-gray-300'>
               {enabled ? t('enabled') : t('disabled')} <span className='text-gray-400 dark:text-gray-500 font-normal'>({t('disabledTips')})</span>
             </span>
@@ -193,7 +193,7 @@ const CategoryForm = ({ onSubmit, initialData, onCancel, isEditing }: CategoryFo
           <button
             type='submit'
             disabled={isSubmitting}
-            className='px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200 font-medium flex-grow sm:flex-grow-0'
+            className='px-4 py-2 bg-cyan-600 text-white rounded-lg hover:bg-cyan-700 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200 font-medium flex-grow sm:flex-grow-0'
           >
             {isSubmitting ? t('saving') : isEditing ? t('updateCategory') : t('saveCategory')}
           </button>

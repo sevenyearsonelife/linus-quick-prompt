@@ -398,7 +398,7 @@ const NotionIntegration: React.FC<NotionIntegrationProps> = () => {
               ? "bg-green-50 border-green-500 text-green-800 dark:bg-green-900/30 dark:text-green-200 dark:border-green-500"
               : testMessage.type === "error"
               ? "bg-red-50 border-red-500 text-red-800 dark:bg-red-900/30 dark:text-red-200 dark:border-red-500"
-              : "bg-blue-50 border-blue-500 text-blue-800 dark:bg-blue-900/30 dark:text-blue-200 dark:border-blue-500"
+              : "bg-cyan-50 border-cyan-500 text-cyan-800 dark:bg-cyan-900/30 dark:text-cyan-200 dark:border-cyan-500"
           } flex items-center`}
         >
           <span
@@ -407,7 +407,7 @@ const NotionIntegration: React.FC<NotionIntegrationProps> = () => {
                 ? "text-green-600"
                 : testMessage.type === "error"
                 ? "text-red-600"
-                : "text-blue-600"
+                : "text-cyan-600"
             }`}
           >
             {testMessage.type === "success" ? (
@@ -452,7 +452,7 @@ const NotionIntegration: React.FC<NotionIntegrationProps> = () => {
                   href="https://github.com/wenyuanw/quick-prompt/blob/main/docs/notion-sync-guide.md"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center text-sm bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 hover:bg-blue-100 dark:hover:bg-blue-800/40 px-3 py-1.5 rounded-full transition-colors font-medium"
+                  className="inline-flex items-center text-sm bg-cyan-50 dark:bg-cyan-900/30 text-cyan-600 dark:text-cyan-400 hover:bg-cyan-100 dark:hover:bg-cyan-800/40 px-3 py-1.5 rounded-full transition-colors font-medium"
                 >
                   <svg
                     className="w-4 h-4 mr-1.5"
@@ -487,7 +487,7 @@ const NotionIntegration: React.FC<NotionIntegrationProps> = () => {
                     onChange={(e) => setApiKey(e.target.value)}
                     placeholder={t("notionAPIKeyPlaceholder")}
                     required
-                    className="block px-3 py-2 mt-1 w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                    className="block px-3 py-2 mt-1 w-full rounded-md border-gray-300 shadow-sm focus:border-cyan-500 focus:ring-cyan-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
                   />
                   <p className="mt-1.5 text-xs text-gray-500 dark:text-gray-400">
                     {t("notionAPIKeyHelp")}{" "}
@@ -495,7 +495,7 @@ const NotionIntegration: React.FC<NotionIntegrationProps> = () => {
                       href="https://www.notion.so/my-integrations"
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-blue-600 dark:text-blue-400 hover:underline"
+                      className="text-cyan-600 dark:text-cyan-400 hover:underline"
                     >
                       {t("notionIntegrationsPage")}
                     </a>{" "}
@@ -517,7 +517,7 @@ const NotionIntegration: React.FC<NotionIntegrationProps> = () => {
                     onChange={(e) => setDatabaseId(e.target.value)}
                     placeholder={t("notionDatabaseIDPlaceholder")}
                     required
-                    className="block px-3 py-2 mt-1 w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                    className="block px-3 py-2 mt-1 w-full rounded-md border-gray-300 shadow-sm focus:border-cyan-500 focus:ring-cyan-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
                   />
                   <p className="mt-1.5 text-xs text-gray-500 dark:text-gray-400">
                     {t("notionDatabaseIDHelp")}
@@ -529,7 +529,7 @@ const NotionIntegration: React.FC<NotionIntegrationProps> = () => {
             <div className="flex justify-end">
               <button
                 type="submit"
-                className="flex items-center px-4 py-2 font-medium text-white bg-blue-600/90 dark:bg-blue-500/80 rounded-md transition-colors hover:bg-blue-700 dark:hover:bg-blue-600/90 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800"
+                className="flex items-center px-4 py-2 font-medium text-white bg-cyan-600/90 dark:bg-cyan-500/80 rounded-md transition-colors hover:bg-cyan-700 dark:hover:bg-cyan-600/90 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800"
               >
                 <svg
                   className="w-4 h-4 mr-1.5"
@@ -569,10 +569,10 @@ const NotionIntegration: React.FC<NotionIntegrationProps> = () => {
               onChange={handleSyncToNotionToggle}
               className={`${
                 isSyncToNotionEnabled
-                  ? "bg-blue-600"
+                  ? "bg-cyan-600"
                   : "bg-gray-200 dark:bg-gray-700"
               } 
-                relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800`}
+                relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800`}
             >
               <span className="sr-only">{t("enableSync")}</span>
               <span
@@ -597,10 +597,10 @@ const NotionIntegration: React.FC<NotionIntegrationProps> = () => {
       </div>
 
       <div className="grid grid-cols-1 gap-6 mb-6 md:grid-cols-2">
-        <div className="p-6 bg-indigo-50/80 dark:bg-indigo-900/30 backdrop-blur-sm rounded-xl border border-indigo-200/50 dark:border-indigo-800/50 shadow-lg">
+        <div className="p-6 bg-teal-50/80 dark:bg-teal-900/30 backdrop-blur-sm rounded-xl border border-teal-200/50 dark:border-teal-800/50 shadow-lg">
           <div className="flex items-center mb-4">
             <svg
-              className="mr-2 w-5 h-5 text-indigo-600 dark:text-indigo-400"
+              className="mr-2 w-5 h-5 text-teal-600 dark:text-teal-400"
               fill="currentColor"
               viewBox="0 0 20 20"
             >
@@ -641,7 +641,7 @@ const NotionIntegration: React.FC<NotionIntegrationProps> = () => {
               type="button"
               onClick={handleSyncFromNotionAppendClick}
               disabled={currentSyncId !== null}
-              className="flex justify-center items-center px-4 py-2 w-full font-medium text-white bg-blue-600/90 dark:bg-blue-500/80 rounded-md transition-colors hover:bg-blue-700 dark:hover:bg-blue-600/90 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 disabled:opacity-60 disabled:cursor-not-allowed"
+              className="flex justify-center items-center px-4 py-2 w-full font-medium text-white bg-cyan-600/90 dark:bg-cyan-500/80 rounded-md transition-colors hover:bg-cyan-700 dark:hover:bg-cyan-600/90 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 disabled:opacity-60 disabled:cursor-not-allowed"
             >
               <svg
                 className="w-4 h-4 mr-1.5"
@@ -662,7 +662,7 @@ const NotionIntegration: React.FC<NotionIntegrationProps> = () => {
 
           <div className="p-3 text-xs text-gray-600 bg-white/70 dark:bg-gray-700/70 backdrop-blur-sm rounded-md border border-gray-200/50 dark:border-gray-600/50 shadow-sm dark:text-gray-400">
             <div className="mb-1.5">
-              <span className="inline-block bg-blue-100 dark:bg-blue-800/60 text-blue-800 dark:text-blue-200 px-1.5 py-0.5 rounded font-semibold text-xs mr-1">
+              <span className="inline-block bg-cyan-100 dark:bg-cyan-800/60 text-cyan-800 dark:text-cyan-200 px-1.5 py-0.5 rounded font-semibold text-xs mr-1">
                 {t("appendMode")}
               </span>
               {t("appendModeDescription")}

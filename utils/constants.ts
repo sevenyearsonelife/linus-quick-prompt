@@ -14,7 +14,7 @@ export const DEFAULT_CATEGORIES: Category[] = [
     id: DEFAULT_CATEGORY_ID,
     name: "默认",
     description: "系统默认分类，用于存放未分类的提示词",
-    color: "#6366f1",
+    color: "#06b6d4",
     enabled: true,
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),

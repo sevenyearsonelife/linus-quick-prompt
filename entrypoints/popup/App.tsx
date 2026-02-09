@@ -421,7 +421,7 @@ function App() {
       <div className='rounded-lg shadow p-2 mb-3 relative bg-white dark:bg-gray-800 transition-colors duration-200'>
         <div className='flex justify-between items-center mb-1'>
           <div className='flex items-center'>
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-3.5 w-3.5 mr-1 text-blue-500 dark:text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-3.5 w-3.5 mr-1 text-cyan-500 dark:text-cyan-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
             </svg>
             <h2 className='text-sm font-semibold m-0 text-gray-700 dark:text-gray-200'>{t('promptLibrary')}</h2>
@@ -444,7 +444,7 @@ function App() {
             <div className='text-red-500 text-center text-xs dark:text-red-400'>{error}</div>
           ) : (
             <div className='text-center flex items-center justify-center'>
-              <span className='text-xl font-bold text-blue-600 dark:text-blue-400 mr-1.5'>
+              <span className='text-xl font-bold text-cyan-600 dark:text-cyan-400 mr-1.5'>
                 {promptCount}
               </span>
               <p className='text-gray-500 text-xs m-0 dark:text-gray-400'>{t('availablePrompts')}</p>
@@ -457,7 +457,7 @@ function App() {
       <div className='flex flex-col gap-2'>
         <button
           onClick={openOptionsPage}
-          className='bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-800 transition-colors duration-200'
+          className='bg-cyan-600 text-white px-4 py-2 rounded-md hover:bg-cyan-700 dark:bg-cyan-700 dark:hover:bg-cyan-800 transition-colors duration-200'
         >
           {t('managePrompts')}
         </button>
@@ -465,7 +465,7 @@ function App() {
         <div className='rounded-lg shadow bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 p-4 transition-colors duration-200'>
           {/* 标题区域 */}
           <div className='flex items-center gap-3 mb-3'>
-            <div className='flex-shrink-0 w-10 h-10 bg-blue-100 text-blue-600 dark:bg-blue-900/30 dark:text-blue-300 rounded-full flex items-center justify-center'>
+            <div className='flex-shrink-0 w-10 h-10 bg-cyan-100 text-cyan-600 dark:bg-cyan-900/30 dark:text-cyan-300 rounded-full flex items-center justify-center'>
               <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
@@ -481,7 +481,7 @@ function App() {
             <button
               onClick={handleExtractQuestions}
               disabled={extractingQuestions}
-              className='flex-1 bg-blue-600 text-white px-4 py-2 rounded-md text-sm font-semibold hover:bg-blue-700 active:bg-blue-800 disabled:bg-blue-400 disabled:text-white disabled:cursor-not-allowed transition-colors duration-200'
+              className='flex-1 bg-cyan-600 text-white px-4 py-2 rounded-md text-sm font-semibold hover:bg-cyan-700 active:bg-cyan-800 disabled:bg-cyan-400 disabled:text-white disabled:cursor-not-allowed transition-colors duration-200'
             >
               {extractingQuestions ? (
                 <span className='flex items-center justify-center gap-2'>

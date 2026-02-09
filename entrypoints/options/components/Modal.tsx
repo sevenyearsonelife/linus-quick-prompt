@@ -55,7 +55,7 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, title, children }) => {
             <h3 className='text-xl font-semibold text-gray-800 flex items-center'>
               {title === t('newPrompt') ? (
                 <svg
-                  className='w-5 h-5 mr-2 text-blue-600'
+                  className='w-5 h-5 mr-2 text-cyan-600'
                   fill='none'
                   stroke='currentColor'
                   viewBox='0 0 24 24'
@@ -69,7 +69,7 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, title, children }) => {
                 </svg>
               ) : (
                 <svg
-                  className='w-5 h-5 mr-2 text-blue-600'
+                  className='w-5 h-5 mr-2 text-cyan-600'
                   fill='none'
                   stroke='currentColor'
                   viewBox='0 0 24 24'

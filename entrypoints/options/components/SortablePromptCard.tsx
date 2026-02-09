@@ -91,7 +91,7 @@ const SortablePromptCard: React.FC<SortablePromptCardProps> = ({
       ref={setNodeRef}
       style={style}
       className={`bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-200 flex flex-col ${
-        isDragging ? 'shadow-lg scale-105 ring-2 ring-blue-500 ring-opacity-50' : ''
+        isDragging ? 'shadow-lg scale-105 ring-2 ring-cyan-500 ring-opacity-50' : ''
       }`}
     >
       {/* Card Header */}
@@ -117,7 +117,7 @@ const SortablePromptCard: React.FC<SortablePromptCardProps> = ({
               <div className='flex items-center'>
                 <div
                   className='w-3 h-3 rounded-full mr-1.5'
-                  style={{ backgroundColor: category.color || '#6366f1' }}
+                  style={{ backgroundColor: category.color || '#06b6d4' }}
                 />
                 <span className='text-xs text-gray-600 dark:text-gray-300 font-medium'>{category.name}</span>
               </div>
@@ -148,7 +148,7 @@ const SortablePromptCard: React.FC<SortablePromptCardProps> = ({
               {prompt.tags.map((tag) => (
                 <span
                   key={tag}
-                  className='inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 dark:bg-blue-900/50 text-blue-800 dark:text-blue-300'
+                  className='inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-cyan-100 dark:bg-cyan-900/50 text-cyan-800 dark:text-cyan-300'
                 >
                   #{tag}
                 </span>
@@ -201,7 +201,7 @@ const SortablePromptCard: React.FC<SortablePromptCardProps> = ({
                 onChange={(e) => onToggleEnabled(prompt.id, e.target.checked)}
                 className='sr-only peer'
               />
-              <div className='relative w-9 h-5 bg-gray-200 dark:bg-gray-600 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-600 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[""] after:absolute after:top-1/2 after:right-1/2 after:-translate-y-1/2 after:bg-white after:border-gray-300 dark:after:border-gray-600 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-blue-600'></div>
+              <div className='relative w-9 h-5 bg-gray-200 dark:bg-gray-600 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-cyan-300 dark:peer-focus:ring-cyan-600 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[""] after:absolute after:top-1/2 after:right-1/2 after:-translate-y-1/2 after:bg-white after:border-gray-300 dark:after:border-gray-600 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-cyan-600'></div>
               <span className='ml-2 text-xs text-gray-600 dark:text-gray-300'>
                 {prompt.enabled !== undefined ? (prompt.enabled ? t('enabled') : t('disabled')) : t('enabled')}
               </span>
@@ -244,7 +244,7 @@ const SortablePromptCard: React.FC<SortablePromptCardProps> = ({
             copiedId === prompt.id
               ? 'bg-green-100 dark:bg-green-900/50 border-green-300 dark:border-green-600 text-green-700 dark:text-green-400'
               : 'bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700'
-          } focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-blue-500`}
+          } focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-cyan-500`}
         >
           <span className='flex items-center'>
             {copiedId === prompt.id ? (
@@ -287,7 +287,7 @@ const SortablePromptCard: React.FC<SortablePromptCardProps> = ({
 
         <button
           onClick={() => onEdit(prompt.id)}
-          className='px-3 py-1.5 text-sm rounded-md bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-blue-500 transition-colors duration-200'
+          className='px-3 py-1.5 text-sm rounded-md bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-cyan-500 transition-colors duration-200'
         >
           <span className='flex items-center'>
             <svg

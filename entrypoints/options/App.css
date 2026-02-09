@@ -35,8 +35,8 @@ html.dark .bg-gray-50:hover {
   transition: background-color 0.3s ease !important;
 }
 
-html.dark .bg-blue-50 {
-  background-color: rgba(59, 130, 246, 0.15) !important;
+html.dark .bg-cyan-50 {
+  background-color: rgba(6, 182, 212, 0.15) !important;
 }
 
 html.dark .border-gray-700 {
@@ -79,13 +79,13 @@ html.dark .hamburger-button::before {
 /* 汉堡按钮动画增强 */
 @keyframes buttonPulse {
   0% {
-    box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.4);
+    box-shadow: 0 0 0 0 rgba(6, 182, 212, 0.4);
   }
   70% {
-    box-shadow: 0 0 0 10px rgba(59, 130, 246, 0);
+    box-shadow: 0 0 0 10px rgba(6, 182, 212, 0);
   }
   100% {
-    box-shadow: 0 0 0 0 rgba(59, 130, 246, 0);
+    box-shadow: 0 0 0 0 rgba(6, 182, 212, 0);
   }
 }
 
@@ -160,12 +160,12 @@ html.dark input::placeholder {
 }
 
 /* 焦点状态 */
-html.dark .focus\:ring-blue-500:focus {
+html.dark .focus\:ring-cyan-500:focus {
   --tw-ring-opacity: 0.75 !important;
 }
 
-html.dark .focus\:border-blue-500:focus {
-  border-color: rgba(59, 130, 246, 0.5) !important;
+html.dark .focus\:border-cyan-500:focus {
+  border-color: rgba(6, 182, 212, 0.5) !important;
 }
 
 /* 模态框样式 */
@@ -184,7 +184,7 @@ html.dark .grid-cols-1 > div {
   border-color: #383838 !important;
 }
 
-html.dark .bg-gradient-to-r.from-blue-50.to-white {
+html.dark .bg-gradient-to-r.from-cyan-50.to-white {
   background-image: linear-gradient(to right, #1a2234, #1e1e1e) !important;
 }
 
@@ -244,12 +244,12 @@ html.dark .hover\:bg-red-50:hover {
 }
 
 /* 标签样式 */
-html.dark .bg-blue-100 {
-  background-color: rgba(59, 130, 246, 0.15) !important;
+html.dark .bg-cyan-100 {
+  background-color: rgba(6, 182, 212, 0.15) !important;
 }
 
-html.dark .text-blue-800 {
-  color: #90caf9 !important;
+html.dark .text-cyan-800 {
+  color: #67e8f9 !important;
 }
 
 /* PromptForm 样式 */
@@ -290,7 +290,7 @@ html.dark .border-dashed.border-gray-300 {
 
 /* 加载动画 */
 html.dark .animate-spin {
-  color: #3b82f6 !important;
+  color: #06b6d4 !important;
 }
 
 /* 阴影微调 */

@@ -59,7 +59,7 @@ const Toast: React.FC<ToastProps> = ({
       ? 'bg-red-500' 
       : type === 'loading'
         ? 'bg-yellow-500'
-        : 'bg-blue-500';
+        : 'bg-cyan-500';
       
   const iconClass = type === 'success' 
     ? 'text-green-500' 
@@ -67,7 +67,7 @@ const Toast: React.FC<ToastProps> = ({
       ? 'text-red-500' 
       : type === 'loading'
         ? 'text-yellow-500'
-        : 'text-blue-500';
+        : 'text-cyan-500';
 
   return (
     <div className={`flex flex-col p-4 mb-2 w-full max-w-xs text-gray-500 bg-white rounded-lg shadow dark:text-gray-400 dark:bg-gray-800 transition-all duration-300 ease-in-out ${expanded ? 'max-w-md' : ''}`} role="alert">

@@ -34,7 +34,7 @@ const SearchBar = ({ value, onChange }: SearchBarProps) => {
         type='text'
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        className='block w-full p-3 pl-10 pr-10 text-gray-700 border border-gray-300 rounded-lg bg-white focus:ring-2 focus:outline-none focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 placeholder:text-gray-400'
+        className='block w-full p-3 pl-10 pr-10 text-gray-700 border border-gray-300 rounded-lg bg-white focus:ring-2 focus:outline-none focus:ring-cyan-500 focus:border-cyan-500 transition-all duration-200 placeholder:text-gray-400'
         placeholder={t('searchPromptTitleContentTag')}
       />
 

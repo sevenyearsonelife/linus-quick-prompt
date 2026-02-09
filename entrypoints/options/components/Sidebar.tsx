@@ -193,24 +193,24 @@ const Sidebar: React.FC<SidebarProps> = ({ className = "" }) => {
                 className="block overflow-hidden relative p-4 bg-gradient-to-br from-gray-50 to-gray-100 rounded-xl border border-gray-200 shadow-sm transition-all duration-200 dark:from-gray-800 dark:to-gray-700 dark:border-gray-600 hover:from-gray-100 hover:to-gray-150 dark:hover:from-gray-700 dark:hover:to-gray-600 group hover:shadow-md"
               >
                 {/* 背景装饰渐变 */}
-                <div className="absolute inset-0 bg-gradient-to-br opacity-0 transition-opacity duration-300 from-purple-500/5 to-violet-500/5 dark:from-purple-400/10 dark:to-violet-400/10 group-hover:opacity-100"></div>
+                <div className="absolute inset-0 bg-gradient-to-br opacity-0 transition-opacity duration-300 from-cyan-500/5 to-sky-500/5 dark:from-cyan-400/10 dark:to-sky-400/10 group-hover:opacity-100"></div>
                 
                 {/* 装饰性光点群 */}
-                <div className="absolute top-2 right-2 w-2 h-2 bg-purple-400 rounded-full opacity-60 transition-all duration-300 group-hover:opacity-80 group-hover:scale-110"></div>
-                <div className="absolute top-4 right-4 w-1.5 h-1.5 bg-violet-400 rounded-full opacity-50 group-hover:opacity-70 transition-all duration-300 group-hover:scale-125"></div>
-                <div className="absolute top-6 right-6 w-1 h-1 bg-purple-300 rounded-full opacity-40 transition-all duration-300 group-hover:opacity-60"></div>
-                <div className="absolute bottom-3 left-3 w-1.5 h-1.5 bg-blue-400 rounded-full opacity-30 group-hover:opacity-50 transition-all duration-300 group-hover:scale-110"></div>
-                <div className="absolute bottom-5 left-5 w-1 h-1 bg-indigo-400 rounded-full opacity-25 transition-all duration-300 group-hover:opacity-40"></div>
+                <div className="absolute top-2 right-2 w-2 h-2 bg-cyan-400 rounded-full opacity-60 transition-all duration-300 group-hover:opacity-80 group-hover:scale-110"></div>
+                <div className="absolute top-4 right-4 w-1.5 h-1.5 bg-sky-400 rounded-full opacity-50 group-hover:opacity-70 transition-all duration-300 group-hover:scale-125"></div>
+                <div className="absolute top-6 right-6 w-1 h-1 bg-cyan-300 rounded-full opacity-40 transition-all duration-300 group-hover:opacity-60"></div>
+                <div className="absolute bottom-3 left-3 w-1.5 h-1.5 bg-cyan-400 rounded-full opacity-30 group-hover:opacity-50 transition-all duration-300 group-hover:scale-110"></div>
+                <div className="absolute bottom-5 left-5 w-1 h-1 bg-teal-400 rounded-full opacity-25 transition-all duration-300 group-hover:opacity-40"></div>
                 
                 {/* 微妙的几何装饰 */}
-                <div className="absolute top-1 left-1 w-3 h-3 rounded-full border border-purple-200 opacity-20 transition-opacity duration-300 dark:border-purple-600 group-hover:opacity-40"></div>
-                <div className="absolute right-1 bottom-1 w-2 h-2 rounded-sm border border-violet-200 transition-opacity duration-300 rotate-45 dark:border-violet-600 opacity-15 group-hover:opacity-30"></div>
+                <div className="absolute top-1 left-1 w-3 h-3 rounded-full border border-cyan-200 opacity-20 transition-opacity duration-300 dark:border-cyan-600 group-hover:opacity-40"></div>
+                <div className="absolute right-1 bottom-1 w-2 h-2 rounded-sm border border-sky-200 transition-opacity duration-300 rotate-45 dark:border-sky-600 opacity-15 group-hover:opacity-30"></div>
                 
                 <div className="flex relative z-10 flex-col items-center space-y-3">
                   {/* Logo */}
                   <div className="relative transition-all duration-200 ease-out transform group-hover:scale-105">
                     {/* Logo光晕效果 */}
-                    <div className="absolute inset-0 rounded-xl opacity-0 blur-md transition-opacity duration-300 scale-110 bg-purple-400/20 group-hover:opacity-100"></div>
+                    <div className="absolute inset-0 rounded-xl opacity-0 blur-md transition-opacity duration-300 scale-110 bg-cyan-400/20 group-hover:opacity-100"></div>
                     <img
                       src={Logo}
                       alt="Quick Prompt Logo"
@@ -220,7 +220,7 @@ const Sidebar: React.FC<SidebarProps> = ({ className = "" }) => {
 
                   {/* 品牌名称 */}
                   <div className="relative text-center">
-                    <h1 className="text-lg font-bold text-transparent bg-clip-text bg-gradient-to-r from-gray-800 to-gray-600 transition-all duration-300 dark:from-gray-100 dark:to-gray-300 group-hover:from-purple-700 group-hover:to-violet-600 dark:group-hover:from-purple-300 dark:group-hover:to-violet-200">
+                    <h1 className="text-lg font-bold text-transparent bg-clip-text bg-gradient-to-r from-gray-800 to-gray-600 transition-all duration-300 dark:from-gray-100 dark:to-gray-300 group-hover:from-cyan-700 group-hover:to-sky-600 dark:group-hover:from-cyan-300 dark:group-hover:to-sky-200">
                       Quick Prompt
                     </h1>
                   </div>
@@ -238,7 +238,7 @@ const Sidebar: React.FC<SidebarProps> = ({ className = "" }) => {
                   className={({ isActive }) =>
                     `group flex items-center px-3 py-3 text-sm font-medium rounded-lg transition-all duration-200 ${
                       isActive
-                        ? "bg-blue-50 dark:bg-blue-900/50 text-blue-700 dark:text-blue-300 border-r-2 border-blue-700 dark:border-blue-400 shadow-sm"
+                        ? "bg-cyan-50 dark:bg-cyan-900/50 text-cyan-700 dark:text-cyan-300 border-r-2 border-cyan-700 dark:border-cyan-400 shadow-sm"
                         : "text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-gray-100 hover:shadow-sm"
                     }`
                   }
