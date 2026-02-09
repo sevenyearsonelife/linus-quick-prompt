@@ -1,6 +1,6 @@
 {
   "appDescription": {
-    "message": "在网页输入框中通过指令快速插入预设的 Prompt 内容。"
+    "message": "论文阅读提示词管理"
   },
   "openPromptSelector": {
     "message": "打开提示词选择弹窗"
