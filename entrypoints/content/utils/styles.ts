@@ -17,21 +17,21 @@ export function getPromptSelectorStyles(): string {
       --qp-bg-overlay: rgba(0, 0, 0, 0.5);
       --qp-bg-primary: #ffffff;
       --qp-bg-secondary: #f9fafb;
-      --qp-bg-hover: #f8f5ff;
-      --qp-bg-selected: #f3ecff;
+      --qp-bg-hover: #ecfeff;
+      --qp-bg-selected: #cffafe;
       --qp-bg-tag: #f3f4f6;
       --qp-text-primary: #111827;
       --qp-text-secondary: #4b5563;
       --qp-text-tag: #6b7280;
       --qp-border-color: #e5e7eb;
-      --qp-focus-ring: #9d85f2;
-      --qp-shadow-color: rgba(124, 58, 237, 0.06);
+      --qp-focus-ring: #22d3ee;
+      --qp-shadow-color: rgba(6, 182, 212, 0.06);
       --qp-green: #10b981;
-      --qp-accent: #6366f1;
-      --qp-accent-light: #a495eb;
-      --qp-gradient-start: #9f87f0;
-      --qp-gradient-end: #8674e2;
-      --qp-accent-hover: #4f46e5;
+      --qp-accent: #06b6d4;
+      --qp-accent-light: #67e8f9;
+      --qp-gradient-start: #67e8f9;
+      --qp-gradient-end: #06b6d4;
+      --qp-accent-hover: #0891b2;
       --qp-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
     }
 
@@ -40,20 +40,20 @@ export function getPromptSelectorStyles(): string {
       --qp-bg-overlay: rgba(0, 0, 0, 0.7);
       --qp-bg-primary: #1f2937;
       --qp-bg-secondary: #111827;
-      --qp-bg-hover: #2c2967;
-      --qp-bg-selected: #3b348c;
+      --qp-bg-hover: #164e63;
+      --qp-bg-selected: #155e75;
       --qp-bg-tag: #374151;
       --qp-text-primary: #f9fafb;
       --qp-text-secondary: #9ca3af;
       --qp-text-tag: #d1d5db;
       --qp-border-color: #374151;
-      --qp-focus-ring: #9d85f2;
-      --qp-shadow-color: rgba(124, 58, 237, 0.12);
+      --qp-focus-ring: #22d3ee;
+      --qp-shadow-color: rgba(6, 182, 212, 0.12);
       --qp-green: #34d399;
-      --qp-accent: #6366f1;
-      --qp-accent-hover: #818cf8;
-      --qp-gradient-start: #7e63e3;
-      --qp-gradient-end: #6055c5;
+      --qp-accent: #06b6d4;
+      --qp-accent-hover: #67e8f9;
+      --qp-gradient-start: #0e7490;
+      --qp-gradient-end: #155e75;
       --qp-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -1px rgba(0, 0, 0, 0.18);
     }
     
@@ -107,7 +107,7 @@ export function getPromptSelectorStyles(): string {
       border-radius: 12px !important;
       overflow: hidden !important;
       background-color: var(--qp-bg-primary) !important;
-      box-shadow: 0 8px 16px rgba(124, 58, 237, 0.06), 0 2px 4px rgba(124, 58, 237, 0.03) !important;
+      box-shadow: 0 8px 16px rgba(6, 182, 212, 0.06), 0 2px 4px rgba(6, 182, 212, 0.03) !important;
       transition: transform 0.25s ease-out, opacity 0.25s ease-out !important;
       transform: translateY(0) scale(1) !important;
       opacity: 1 !important;
@@ -172,7 +172,7 @@ export function getPromptSelectorStyles(): string {
 
     :host([data-theme='dark']) .qp-modal-footer {
       background-color: var(--qp-bg-secondary) !important;
-      border-top: 1px solid rgba(124, 58, 237, 0.1) !important;
+      border-top: 1px solid rgba(6, 182, 212, 0.1) !important;
     }
 
     /* 弹窗内容样式 */
@@ -381,8 +381,8 @@ export function getPromptSelectorStyles(): string {
     [data-theme='light'] .qp-search-input {
       background-color: rgba(255, 255, 255, 0.95) !important;
       color: #1a1a1a !important;
-      box-shadow: 0 4px 12px rgba(124, 58, 237, 0.1), inset 0 1px 0 rgba(255, 255, 255, 1), 0 1px 3px rgba(0, 0, 0, 0.05) !important;
-      border: 1px solid rgba(124, 58, 237, 0.15) !important;
+      box-shadow: 0 4px 12px rgba(6, 182, 212, 0.1), inset 0 1px 0 rgba(255, 255, 255, 1), 0 1px 3px rgba(0, 0, 0, 0.05) !important;
+      border: 1px solid rgba(6, 182, 212, 0.15) !important;
     }
 
     :host([data-theme='light']) .qp-search-input::placeholder {
@@ -391,14 +391,14 @@ export function getPromptSelectorStyles(): string {
 
     :host([data-theme='light']) .qp-search-input:hover {
       background-color: #ffffff !important;
-      border-color: rgba(124, 58, 237, 0.25) !important;
-      box-shadow: 0 6px 16px rgba(124, 58, 237, 0.15), inset 0 1px 0 rgba(255, 255, 255, 1), 0 2px 6px rgba(0, 0, 0, 0.08) !important;
+      border-color: rgba(6, 182, 212, 0.25) !important;
+      box-shadow: 0 6px 16px rgba(6, 182, 212, 0.15), inset 0 1px 0 rgba(255, 255, 255, 1), 0 2px 6px rgba(0, 0, 0, 0.08) !important;
     }
 
     :host([data-theme='light']) .qp-search-input:focus {
       background-color: #ffffff !important;
-      border-color: rgba(124, 58, 237, 0.4) !important;
-      box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.1), 0 6px 16px rgba(124, 58, 237, 0.15), inset 0 1px 0 rgba(255, 255, 255, 1) !important;
+      border-color: rgba(6, 182, 212, 0.4) !important;
+      box-shadow: 0 0 0 3px rgba(6, 182, 212, 0.1), 0 6px 16px rgba(6, 182, 212, 0.15), inset 0 1px 0 rgba(255, 255, 255, 1) !important;
     }
     
     /* 搜索输入框暗黑模式 */
@@ -421,8 +421,8 @@ export function getPromptSelectorStyles(): string {
 
     :host([data-theme='dark']) .qp-search-input:focus {
       background-color: rgba(15, 23, 42, 0.9) !important;
-      border-color: rgba(157, 133, 242, 0.5) !important;
-      box-shadow: 0 0 0 3px rgba(157, 133, 242, 0.2), 0 6px 16px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.15) !important;
+      border-color: rgba(34, 211, 238, 0.5) !important;
+      box-shadow: 0 0 0 3px rgba(34, 211, 238, 0.2), 0 6px 16px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.15) !important;
     }
     
     /* 滚动条样式 */
@@ -500,32 +500,32 @@ export function getPromptSelectorStyles(): string {
     /* 分类选择器亮色模式 */
     :host([data-theme='light']) .qp-category-select {
       background-color: rgba(255, 255, 255, 0.95) !important;
-      background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%236366f1' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpath d='M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z'/%3e%3c/svg%3e"), url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%236366f1' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6,9 12,15 18,9'/%3e%3c/svg%3e") !important;
+      background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2306b6d4' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpath d='M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z'/%3e%3c/svg%3e"), url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2306b6d4' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6,9 12,15 18,9'/%3e%3c/svg%3e") !important;
       color: #1a1a1a !important;
-      box-shadow: 0 4px 12px rgba(124, 58, 237, 0.1), inset 0 1px 0 rgba(255, 255, 255, 1), 0 1px 3px rgba(0, 0, 0, 0.05) !important;
-      border: 1px solid rgba(124, 58, 237, 0.15) !important;
+      box-shadow: 0 4px 12px rgba(6, 182, 212, 0.1), inset 0 1px 0 rgba(255, 255, 255, 1), 0 1px 3px rgba(0, 0, 0, 0.05) !important;
+      border: 1px solid rgba(6, 182, 212, 0.15) !important;
     }
 
     :host([data-theme='light']) .qp-category-select:hover {
       background-color: #ffffff !important;
-      border-color: rgba(124, 58, 237, 0.25) !important;
-      box-shadow: 0 6px 16px rgba(124, 58, 237, 0.15), inset 0 1px 0 rgba(255, 255, 255, 1), 0 2px 6px rgba(0, 0, 0, 0.08) !important;
+      border-color: rgba(6, 182, 212, 0.25) !important;
+      box-shadow: 0 6px 16px rgba(6, 182, 212, 0.15), inset 0 1px 0 rgba(255, 255, 255, 1), 0 2px 6px rgba(0, 0, 0, 0.08) !important;
     }
 
     :host([data-theme='light']) .qp-category-select:focus {
       background-color: #ffffff !important;
-      border-color: rgba(124, 58, 237, 0.4) !important;
-      box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.1), 0 6px 16px rgba(124, 58, 237, 0.15), inset 0 1px 0 rgba(255, 255, 255, 1) !important;
+      border-color: rgba(6, 182, 212, 0.4) !important;
+      box-shadow: 0 0 0 3px rgba(6, 182, 212, 0.1), 0 6px 16px rgba(6, 182, 212, 0.15), inset 0 1px 0 rgba(255, 255, 255, 1) !important;
     }
 
     :host([data-theme='light']) .qp-category-select:active {
-      box-shadow: 0 2px 8px rgba(124, 58, 237, 0.2), inset 0 1px 0 rgba(255, 255, 255, 1) !important;
+      box-shadow: 0 2px 8px rgba(6, 182, 212, 0.2), inset 0 1px 0 rgba(255, 255, 255, 1) !important;
     }
 
     /* 分类选择器暗黑模式 */
     :host([data-theme='dark']) .qp-category-select {
       background-color: rgba(15, 23, 42, 0.8) !important;
-      background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%239d85f2' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpath d='M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z'/%3e%3c/svg%3e"), url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%239d85f2' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6,9 12,15 18,9'/%3e%3c/svg%3e") !important;
+      background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2322d3ee' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpath d='M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z'/%3e%3c/svg%3e"), url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2322d3ee' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6,9 12,15 18,9'/%3e%3c/svg%3e") !important;
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.1), 0 1px 3px rgba(0, 0, 0, 0.2) !important;
       color: rgba(255, 255, 255, 0.95) !important;
       border: 1px solid rgba(255, 255, 255, 0.1) !important;
@@ -539,8 +539,8 @@ export function getPromptSelectorStyles(): string {
 
     :host([data-theme='dark']) .qp-category-select:focus {
       background-color: rgba(15, 23, 42, 0.9) !important;
-      border-color: rgba(157, 133, 242, 0.5) !important;
-      box-shadow: 0 0 0 3px rgba(157, 133, 242, 0.2), 0 6px 16px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.15) !important;
+      border-color: rgba(34, 211, 238, 0.5) !important;
+      box-shadow: 0 0 0 3px rgba(34, 211, 238, 0.2), 0 6px 16px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.15) !important;
     }
 
     :host([data-theme='dark']) .qp-category-select:active {

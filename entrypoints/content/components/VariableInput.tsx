@@ -91,7 +91,7 @@ const getVariableInputStyles = (): string => {
     
     .qp-form-input:focus {
       border-color: var(--qp-accent) !important;
-      box-shadow: 0 0 0 2px rgba(124, 58, 237, 0.2) !important;
+      box-shadow: 0 0 0 2px rgba(6, 182, 212, 0.2) !important;
     }
     
     .qp-preview {
@@ -135,7 +135,7 @@ const getVariableInputStyles = (): string => {
 
     :host([data-theme="dark"]) .qp-form-input:focus {
       border-color: var(--qp-accent) !important;
-      box-shadow: 0 0 0 2px rgba(124, 58, 237, 0.3) !important;
+      box-shadow: 0 0 0 2px rgba(6, 182, 212, 0.3) !important;
     }
 
     :host([data-theme="dark"]) .qp-preview-content {

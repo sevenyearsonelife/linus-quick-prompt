@@ -550,7 +550,7 @@ const PromptSelector: React.FC<PromptSelectorProps> = ({
                         <div className="qp-prompt-category">
                           <div 
                             className="qp-category-dot" 
-                            style={{ backgroundColor: category.color || '#6366f1' }}
+                            style={{ backgroundColor: category.color || '#06b6d4' }}
                           />
                           <span className="qp-category-name">{category.name}</span>
                         </div>
