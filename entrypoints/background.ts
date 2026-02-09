@@ -14,6 +14,12 @@ const LEGACY_DEFAULT_PROMPT_IDS = new Set([
   "default-ghibli",
   "default-code-explain",
   "default-role-template",
+  "default-weekly-report",
+  "default-meeting-minutes",
+  "default-email-polish",
+  "default-content-summary",
+  "default-cn-en-translate",
+  "default-code-review",
 ]);
 
 export default defineBackground(() => {
