@@ -576,220 +576,137 @@ const PromptManager = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-cyan-50 to-teal-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* 错误提示 */}
-        {error && (
-          <div className="mb-6 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800/50 rounded-2xl p-4 shadow-sm">
-            <div className="flex items-start space-x-3">
-              <div className="flex-shrink-0">
-                <div className="w-10 h-10 bg-red-100 dark:bg-red-900/30 rounded-full flex items-center justify-center">
-                  <svg className="w-5 h-5 text-red-600 dark:text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-                  </svg>
-                </div>
-              </div>
-              <div className="flex-1">
-                <h3 className="text-sm font-medium text-red-800 dark:text-red-300">{t('operationFailed')}</h3>
-                <p className="text-sm text-red-700 dark:text-red-400 mt-1">{error}</p>
-              </div>
+      <div className="w-full py-8">
+        <div className="flex flex-col lg:flex-row lg:items-start">
+          <aside className="w-full lg:w-64 lg:min-h-[calc(100vh-3rem)] bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm border border-white/20 dark:border-gray-700/50 lg:border-l-0 lg:border-t-0 lg:border-b-0 lg:rounded-none rounded-2xl lg:shadow-none shadow-xl p-4 lg:p-6">
+            <div className="lg:sticky lg:top-6">
               <button
-                onClick={() => setError(null)}
-                className="flex-shrink-0 text-red-400 dark:text-red-500 hover:text-red-600 dark:hover:text-red-300 transition-colors"
+                onClick={openAddModal}
+                className="w-full inline-flex items-center justify-center px-6 py-2.5 bg-gradient-to-r from-cyan-600 to-teal-600 hover:from-cyan-700 hover:to-teal-700 text-white text-sm font-medium rounded-xl transition-all duration-200 hover:shadow-lg hover:-translate-y-0.5 shadow-cyan-500/25"
               >
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+                <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
                 </svg>
+                {t('addNewPrompt')}
               </button>
             </div>
-          </div>
-        )}
-
-        {/* 操作栏 */}
-        <div className="mb-8">
-          <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm border border-white/20 dark:border-gray-700/50 rounded-2xl p-4 shadow-xl">
-            <div className="flex flex-col xl:flex-row gap-4 xl:gap-6 items-center">
-              {/* 搜索和筛选区域 */}
-              <div className="flex-1 flex flex-col sm:flex-row gap-3 w-full xl:w-auto">
-                <div className="flex-1 min-w-0">
-                  <div className="relative">
-                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                      <svg className="h-5 w-5 text-gray-600 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                      </svg>
-                    </div>
-                    <input
-                      type="text"
-                      value={searchTerm}
-                      onChange={(e) => setSearchTerm(e.target.value)}
-                      placeholder={t('searchPrompts')}
-                      className="block xl:w-62 w-full pl-10 pr-3 py-3 border border-gray-200 dark:border-gray-600 rounded-xl bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent transition-all duration-200"
-                    />
-                  </div>
-                </div>
-                
-                <div className="w-full sm:w-auto xl:w-32">
-                  <div className="relative">
-                    <select
-                      value={selectedCategoryId || ""}
-                      onChange={(e) => setSelectedCategoryId(e.target.value || null)}
-                      className="block w-full pl-4 pr-8 py-3 bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent transition-all duration-200 appearance-none cursor-pointer"
-                    >
-                      <option value="">{t('allCategories')}</option>
-                      {categories.map((category) => (
-                        <option key={category.id} value={category.id}>
-                          {category.name}
-                        </option>
-                      ))}
-                    </select>
-                    <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
-                      <svg className="h-5 w-5 text-gray-400 dark:text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+          </aside>
+          <div className="flex-1 min-w-0 px-4 sm:px-6 lg:px-8 mt-6 lg:mt-0">
+            {/* 错误提示 */}
+            {error && (
+              <div className="mb-6 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800/50 rounded-2xl p-4 shadow-sm">
+                <div className="flex items-start space-x-3">
+                  <div className="flex-shrink-0">
+                    <div className="w-10 h-10 bg-red-100 dark:bg-red-900/30 rounded-full flex items-center justify-center">
+                      <svg className="w-5 h-5 text-red-600 dark:text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
                       </svg>
                     </div>
                   </div>
-                </div>
-              </div>
-              
-              <div className="w-full flex justify-end">
-                <div className="flex flex-wrap gap-2 sm:gap-3">
-                  {/* 导入导出按钮组 */}
-                  <div className="flex gap-2 sm:gap-3">
-                    <button
-                      onClick={exportPrompts}
-                      disabled={prompts.length === 0}
-                      className="inline-flex items-center px-4 py-1 bg-gray-600 hover:bg-gray-700 disabled:bg-gray-300 text-white text-sm font-medium rounded-xl transition-all duration-200 hover:shadow-lg hover:-translate-y-0.5 disabled:transform-none disabled:shadow-none"
-                      title={prompts.length === 0 ? t('noPromptsToExport') : t('exportAllPrompts')}
-                    >
-                      <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
-                      </svg>
-                      {t('export')}
-                    </button>
-                    
-                    <button
-                      onClick={triggerFileInput}
-                      className="inline-flex items-center px-4 py-2.5 bg-cyan-600 hover:bg-cyan-700 text-white text-sm font-medium rounded-xl transition-all duration-200 hover:shadow-lg hover:-translate-y-0.5"
-                    >
-                      <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-                      </svg>
-                      {t('localImport')}
-                    </button>
-                    
-                    <button
-                      onClick={openRemoteImportModal}
-                      className="inline-flex items-center px-4 py-2.5 bg-teal-600 hover:bg-teal-700 text-white text-sm font-medium rounded-xl transition-all duration-200 hover:shadow-lg hover:-translate-y-0.5"
-                      title={t('importFromUrl')}
-                    >
-                      <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
-                      </svg>
-                      {t('remoteImport')}
-                    </button>
+                  <div className="flex-1">
+                    <h3 className="text-sm font-medium text-red-800 dark:text-red-300">{t('operationFailed')}</h3>
+                    <p className="text-sm text-red-700 dark:text-red-400 mt-1">{error}</p>
                   </div>
-                  
-                  <div className="w-px h-8 bg-gray-300 self-center"></div>
-                  
                   <button
-                    onClick={openAddModal}
-                    className="inline-flex items-center px-6 py-2.5 bg-gradient-to-r from-cyan-600 to-teal-600 hover:from-cyan-700 hover:to-teal-700 text-white text-sm font-medium rounded-xl transition-all duration-200 hover:shadow-lg hover:-translate-y-0.5 shadow-cyan-500/25"
+                    onClick={() => setError(null)}
+                    className="flex-shrink-0 text-red-400 dark:text-red-500 hover:text-red-600 dark:hover:text-red-300 transition-colors"
                   >
-                    <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
                     </svg>
-                    {t('addNewPrompt')}
                   </button>
-
-                  <input
-                    type="file"
-                    ref={fileInputRef}
-                    onChange={importPrompts}
-                    accept=".json"
-                    className="hidden"
-                  />
                 </div>
               </div>
-            </div>
+            )}
+
+            {/* Prompts列表 */}
+            <PromptList
+              prompts={filteredPrompts}
+              onEdit={startEdit}
+              onDelete={deletePrompt}
+              onReorder={handleReorder}
+              searchTerm={searchTerm}
+              allPromptsCount={prompts.length}
+              onToggleEnabled={togglePromptEnabled}
+              onTogglePinned={togglePromptPinned}
+              selectedCategoryId={selectedCategoryId}
+            />
+
+            {/* 无结果提示 */}
+            {filteredPrompts.length === 0 && (
+              <div className="text-center py-16">
+                <div className="max-w-md mx-auto">
+                  <div className="w-24 h-24 mx-auto mb-6 bg-gradient-to-br from-gray-100 to-gray-200 rounded-full flex items-center justify-center">
+                    <svg className="w-12 h-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                    </svg>
+                  </div>
+                  
+                  {searchTerm || selectedCategoryId ? (
+                    <div className="space-y-4">
+                      <h3 className="text-xl font-semibold text-gray-900 dark:text-gray-100">{t('noMatchingPrompts')}</h3>
+                      <p className="text-gray-600 dark:text-gray-300">
+                        {searchTerm && selectedCategoryId 
+                          ? t('noMatchingPromptsInCategory', [categories.find(c => c.id === selectedCategoryId)?.name || '', searchTerm])
+                          : searchTerm 
+                          ? t('noMatchingPrompts')
+                          : t('categoryEmpty', [categories.find(c => c.id === selectedCategoryId)?.name || ''])
+                        }
+                      </p>
+                      <div className="flex flex-wrap justify-center gap-3">
+                        {searchTerm && (
+                          <button
+                            onClick={() => setSearchTerm("")}
+                            className="inline-flex items-center px-4 py-2 bg-cyan-50 dark:bg-cyan-900/30 text-cyan-700 dark:text-cyan-300 rounded-lg hover:bg-cyan-100 dark:hover:bg-cyan-900/50 transition-colors font-medium"
+                          >
+                            <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                            {t('clearSearch')}
+                          </button>
+                        )}
+                        {selectedCategoryId && (
+                          <button
+                            onClick={() => setSelectedCategoryId(null)}
+                            className="inline-flex items-center px-4 py-2 bg-cyan-50 dark:bg-cyan-900/30 text-cyan-700 dark:text-cyan-300 rounded-lg hover:bg-cyan-100 dark:hover:bg-cyan-900/50 transition-colors font-medium"
+                          >
+                            <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+                            </svg>
+                            {t('viewAllCategories')}
+                          </button>
+                        )}
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="space-y-4">
+                      <h3 className="text-xl font-semibold text-gray-900 dark:text-gray-100">{t('noPromptsAdded')}</h3>
+                      <p className="text-gray-600 dark:text-gray-300">{t('createFirstPrompt')}</p>
+                      <button
+                        onClick={openAddModal}
+                        className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-cyan-600 to-teal-600 text-white rounded-xl hover:from-cyan-700 hover:to-teal-700 transition-all duration-200 hover:shadow-lg hover:-translate-y-0.5 font-medium"
+                      >
+                        <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                        </svg>
+                        {t('createFirstPrompt')}
+                      </button>
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
           </div>
         </div>
 
-        {/* Prompts列表 */}
-        <PromptList
-          prompts={filteredPrompts}
-          onEdit={startEdit}
-          onDelete={deletePrompt}
-          onReorder={handleReorder}
-          searchTerm={searchTerm}
-          allPromptsCount={prompts.length}
-          onToggleEnabled={togglePromptEnabled}
-          onTogglePinned={togglePromptPinned}
-          selectedCategoryId={selectedCategoryId}
+        <input
+          type="file"
+          ref={fileInputRef}
+          onChange={importPrompts}
+          accept=".json"
+          className="hidden"
         />
-
-        {/* 无结果提示 */}
-        {filteredPrompts.length === 0 && (
-          <div className="text-center py-16">
-            <div className="max-w-md mx-auto">
-              <div className="w-24 h-24 mx-auto mb-6 bg-gradient-to-br from-gray-100 to-gray-200 rounded-full flex items-center justify-center">
-                <svg className="w-12 h-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                </svg>
-              </div>
-              
-              {searchTerm || selectedCategoryId ? (
-                <div className="space-y-4">
-                  <h3 className="text-xl font-semibold text-gray-900 dark:text-gray-100">{t('noMatchingPrompts')}</h3>
-                  <p className="text-gray-600 dark:text-gray-300">
-                    {searchTerm && selectedCategoryId 
-                      ? t('noMatchingPromptsInCategory', [categories.find(c => c.id === selectedCategoryId)?.name || '', searchTerm])
-                      : searchTerm 
-                      ? t('noMatchingPrompts')
-                      : t('categoryEmpty', [categories.find(c => c.id === selectedCategoryId)?.name || ''])
-                    }
-                  </p>
-                  <div className="flex flex-wrap justify-center gap-3">
-                    {searchTerm && (
-                      <button
-                        onClick={() => setSearchTerm("")}
-                        className="inline-flex items-center px-4 py-2 bg-cyan-50 dark:bg-cyan-900/30 text-cyan-700 dark:text-cyan-300 rounded-lg hover:bg-cyan-100 dark:hover:bg-cyan-900/50 transition-colors font-medium"
-                      >
-                        <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
-                        </svg>
-                        {t('clearSearch')}
-                      </button>
-                    )}
-                    {selectedCategoryId && (
-                      <button
-                        onClick={() => setSelectedCategoryId(null)}
-                        className="inline-flex items-center px-4 py-2 bg-cyan-50 dark:bg-cyan-900/30 text-cyan-700 dark:text-cyan-300 rounded-lg hover:bg-cyan-100 dark:hover:bg-cyan-900/50 transition-colors font-medium"
-                      >
-                        <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
-                        </svg>
-                        {t('viewAllCategories')}
-                      </button>
-                    )}
-                  </div>
-                </div>
-              ) : (
-                <div className="space-y-4">
-                  <h3 className="text-xl font-semibold text-gray-900 dark:text-gray-100">{t('noPromptsAdded')}</h3>
-                  <p className="text-gray-600 dark:text-gray-300">{t('createFirstPrompt')}</p>
-                  <button
-                    onClick={openAddModal}
-                    className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-cyan-600 to-teal-600 text-white rounded-xl hover:from-cyan-700 hover:to-teal-700 transition-all duration-200 hover:shadow-lg hover:-translate-y-0.5 font-medium"
-                  >
-                    <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-                    </svg>
-                    {t('createFirstPrompt')}
-                  </button>
-                </div>
-              )}
-            </div>
-          </div>
-        )}
+        
 
         {/* 添加/编辑 Prompt 模态框 */}
         <Modal

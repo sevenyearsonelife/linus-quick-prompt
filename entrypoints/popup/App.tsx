@@ -1,6 +1,5 @@
 import { BROWSER_STORAGE_KEY } from '@/utils/constants'
 import { useState, useEffect } from 'react'
-import Logo from '~/assets/icon.png'
 import '~/assets/tailwind.css'
 import { t } from '../../utils/i18n'
 
@@ -409,14 +408,6 @@ function App() {
 
   return (
     <div className='p-4 w-full max-w-[700px] min-w-[600px] box-border bg-white text-gray-900 dark:bg-gray-900 dark:text-white transition-colors duration-200'>
-      {/* 标题区域 */}
-      <div className='flex justify-center items-center mb-3'>
-        <img src={Logo} className='h-8 mr-2' alt='quick prompt logo' />
-        <h1 className='text-lg font-bold whitespace-nowrap m-0 p-0 leading-normal dark:text-white'>
-          Linus Prompt
-        </h1>
-      </div>
-
       {/* 统计卡片 */}
       <div className='rounded-lg shadow p-2 mb-3 relative bg-white dark:bg-gray-800 transition-colors duration-200'>
         <div className='flex justify-between items-center mb-1'>
