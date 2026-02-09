@@ -5,8 +5,7 @@ import { getPromptSelectorStyles } from "../utils/styles";
 import { extractVariables } from "../utils/variableParser";
 import { showVariableInput } from "./VariableInput";
 import { isDarkMode, getCopyShortcutText } from "@/utils/tools";
-import { getCategories } from "@/utils/categoryUtils";
-import { getGlobalSetting } from "@/utils/globalSettings";
+import { CATEGORIES_STORAGE_KEY } from "@/utils/constants";
 import { t } from "@/utils/i18n";
 
 interface PromptSelectorProps {
@@ -37,8 +36,16 @@ const PromptSelector: React.FC<PromptSelectorProps> = ({
   useEffect(() => {
     const loadData = async () => {
       try {
-        // 加载分类列表
-        const categoriesList = await getCategories();
+        const response = await browser.runtime.sendMessage({ action: 'getPromptSelectorMeta' });
+        let categoriesList: Category[] = response?.success && Array.isArray(response.data?.categories)
+          ? response.data.categories
+          : [];
+
+        if (!categoriesList.length) {
+          const categoriesResult = await browser.storage.local.get(CATEGORIES_STORAGE_KEY);
+          categoriesList = (categoriesResult[CATEGORIES_STORAGE_KEY] as Category[]) || [];
+        }
+
         const enabledCategories = categoriesList.filter(cat => cat.enabled);
         setCategories(enabledCategories);
         
@@ -49,13 +56,12 @@ const PromptSelector: React.FC<PromptSelectorProps> = ({
         });
         setCategoriesMap(categoryMap);
 
-        // 加载全局设置
-        try {
-          const closeModalOnOutsideClick = await getGlobalSetting('closeModalOnOutsideClick');
-          setCloseOnOutsideClick(closeModalOnOutsideClick);
-        } catch (err) {
-          console.warn('Failed to load global settings:', err);
-          setCloseOnOutsideClick(true); // 默认启用
+        if (response?.success) {
+          setCloseOnOutsideClick(response.data?.closeModalOnOutsideClick !== false);
+        } else {
+          const settingsResult = await browser.storage.sync.get('globalSettings');
+          const closeOnOutsideClick = (settingsResult.globalSettings as { closeModalOnOutsideClick?: boolean } | undefined)?.closeModalOnOutsideClick;
+          setCloseOnOutsideClick(closeOnOutsideClick !== false);
         }
       } catch (err) {
         console.error(t('loadCategoriesFailed'), err);

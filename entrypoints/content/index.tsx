@@ -1,9 +1,7 @@
-import { storage } from '#imports'
 import { isDarkMode } from '@/utils/tools'
 import { showPromptSelector } from './components/PromptSelector'
 import { extractVariables } from './utils/variableParser'
 import { BROWSER_STORAGE_KEY } from '@/utils/constants'
-import { migratePromptsWithCategory } from '@/utils/categoryUtils'
 import type { EditableElement, PromptItem, PromptItemWithVariables } from '@/utils/types'
 import { t } from '@/utils/i18n'
 
@@ -525,14 +523,16 @@ export default defineContentScript({
           return
         }
 
-        // 先执行数据迁移，确保分类信息正确
-        await migratePromptsWithCategory()
-
-        // 从存储中获取所有提示词
-        const allPrompts = (await storage.getItem<PromptItem[]>(`local:${BROWSER_STORAGE_KEY}`)) || []
-        
-        // 过滤只保留启用的提示词
-        const prompts : PromptItemWithVariables[] = allPrompts.filter(prompt => prompt.enabled !== false)
+        // 优先通过后台读取，失败时回退到 content 侧直接读取本地存储
+        let prompts: PromptItemWithVariables[] = []
+        const response = await browser.runtime.sendMessage({ action: 'getPrompts' })
+        if (response?.success && Array.isArray(response.data)) {
+          prompts = response.data
+        } else {
+          const localResult = await browser.storage.local.get(BROWSER_STORAGE_KEY)
+          const localPrompts = (localResult[BROWSER_STORAGE_KEY] as PromptItem[]) || []
+          prompts = localPrompts.filter(prompt => prompt.enabled !== false)
+        }
 
         // 预处理提示词中的变量
         prompts.forEach(prompt => {

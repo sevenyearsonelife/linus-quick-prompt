@@ -1,7 +1,7 @@
-import { BROWSER_STORAGE_KEY } from "@/utils/constants"
+import { BROWSER_STORAGE_KEY, CATEGORIES_STORAGE_KEY } from "@/utils/constants"
 import { authenticateWithGoogle, logoutGoogle, USER_INFO_STORAGE_KEY } from "@/utils/auth/googleAuth"
 import { syncFromNotionToLocal, syncLocalDataToNotion } from "@/utils/sync/notionSync"
-import type { PromptItem } from "@/utils/types"
+import type { Category, PromptItem } from "@/utils/types"
 import { t } from "@/utils/i18n"
 
 // Main message handler
@@ -19,6 +19,29 @@ export const handleRuntimeMessage = async (message: any, sender: Browser.runtime
     } catch (error) {
       console.error(t('backgroundGetPromptsError'), error);
       return { success: false, error: t('backgroundGetPromptsDataError') };
+    }
+  }
+
+  if (message.action === 'getPromptSelectorMeta') {
+    try {
+      const [categoriesResult, settingsResult] = await Promise.all([
+        browser.storage.local.get(CATEGORIES_STORAGE_KEY),
+        browser.storage.sync.get('globalSettings'),
+      ]);
+
+      const categories = (categoriesResult[CATEGORIES_STORAGE_KEY as keyof typeof categoriesResult] as Category[]) || [];
+      const globalSettings = settingsResult.globalSettings as { closeModalOnOutsideClick?: boolean } | undefined;
+
+      return {
+        success: true,
+        data: {
+          categories,
+          closeModalOnOutsideClick: globalSettings?.closeModalOnOutsideClick ?? true,
+        },
+      };
+    } catch (error) {
+      console.error('Failed to get prompt selector meta:', error);
+      return { success: false, error: 'Failed to get prompt selector meta' };
     }
   }
 

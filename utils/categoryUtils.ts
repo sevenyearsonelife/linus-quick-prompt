@@ -1,13 +1,21 @@
-import { storage } from '#imports';
 import { Category, PromptItem } from './types';
 import { CATEGORIES_STORAGE_KEY, BROWSER_STORAGE_KEY, DEFAULT_CATEGORIES, DEFAULT_CATEGORY_ID } from './constants';
+
+const getLocalItem = async <T>(key: string): Promise<T | null> => {
+  const result = await browser.storage.local.get(key);
+  return (result[key] as T) ?? null;
+};
+
+const setLocalItem = async <T>(key: string, value: T): Promise<void> => {
+  await browser.storage.local.set({ [key]: value });
+};
 
 /**
  * 获取所有分类
  */
 export async function getCategories(): Promise<Category[]> {
   try {
-    const categories = await storage.getItem<Category[]>(`local:${CATEGORIES_STORAGE_KEY}`);
+    const categories = await getLocalItem<Category[]>(CATEGORIES_STORAGE_KEY);
     return categories || [];
   } catch (error) {
     console.error('获取分类失败:', error);
@@ -20,7 +28,7 @@ export async function getCategories(): Promise<Category[]> {
  */
 export async function saveCategories(categories: Category[]): Promise<void> {
   try {
-    await storage.setItem<Category[]>(`local:${CATEGORIES_STORAGE_KEY}`, categories);
+    await setLocalItem<Category[]>(CATEGORIES_STORAGE_KEY, categories);
   } catch (error) {
     console.error('保存分类失败:', error);
     throw error;
@@ -121,7 +129,7 @@ export async function deleteCategory(categoryId: string): Promise<void> {
     }
     
     // 获取所有提示词，将属于该分类的提示词移动到默认分类
-    const prompts = await storage.getItem<PromptItem[]>(`local:${BROWSER_STORAGE_KEY}`) || [];
+    const prompts = await getLocalItem<PromptItem[]>(BROWSER_STORAGE_KEY) || [];
     const updatedPrompts = prompts.map(prompt => 
       prompt.categoryId === categoryId 
         ? { ...prompt, categoryId: DEFAULT_CATEGORY_ID }
@@ -129,7 +137,7 @@ export async function deleteCategory(categoryId: string): Promise<void> {
     );
     
     // 保存更新后的提示词
-    await storage.setItem<PromptItem[]>(`local:${BROWSER_STORAGE_KEY}`, updatedPrompts);
+    await setLocalItem<PromptItem[]>(BROWSER_STORAGE_KEY, updatedPrompts);
     
     // 删除分类
     categories.splice(categoryIndex, 1);
@@ -149,7 +157,7 @@ export async function migratePromptsWithCategory(): Promise<void> {
     await initializeDefaultCategories();
     
     // 获取所有提示词
-    const prompts = await storage.getItem<PromptItem[]>(`local:${BROWSER_STORAGE_KEY}`) || [];
+    const prompts = await getLocalItem<PromptItem[]>(BROWSER_STORAGE_KEY) || [];
     
     // 检查是否有需要迁移的数据
     const needMigration = prompts.some(prompt => !prompt.categoryId || prompt.sortOrder === undefined);
@@ -161,7 +169,7 @@ export async function migratePromptsWithCategory(): Promise<void> {
         sortOrder: prompt.sortOrder !== undefined ? prompt.sortOrder : index,
       }));
       
-      await storage.setItem<PromptItem[]>(`local:${BROWSER_STORAGE_KEY}`, migratedPrompts);
+      await setLocalItem<PromptItem[]>(BROWSER_STORAGE_KEY, migratedPrompts);
       console.log('已完成提示词分类和排序迁移');
     }
   } catch (error) {
@@ -174,7 +182,7 @@ export async function migratePromptsWithCategory(): Promise<void> {
  */
 export async function getPromptCountByCategory(categoryId: string): Promise<number> {
   try {
-    const prompts = await storage.getItem<PromptItem[]>(`local:${BROWSER_STORAGE_KEY}`) || [];
+    const prompts = await getLocalItem<PromptItem[]>(BROWSER_STORAGE_KEY) || [];
     return prompts.filter(prompt => prompt.categoryId === categoryId).length;
   } catch (error) {
     console.error('获取分类下提示词数量失败:', error);
